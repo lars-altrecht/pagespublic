@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="nl" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactief Functioneel Ontwerp</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Kalm Neutraal Palet -->
+    <!-- Application Structure Plan: De applicatie is gestructureerd als een single-page applicatie met een vaste navigatiezijbalk aan de left-kant en een scrollbaar contentgebied aan de rechterkant. Deze dashboard-achtige opzet is gekozen omdat het een directe, duidelijke en vertrouwde manier biedt om door een gestructureerd document zoals een functioneel ontwerp te navigeren. Gebruikers kunnen direct naar elke sectie springen zonder te hoeven scrollen. Interactieve elementen, zoals toggles voor User Stories/Use Cases en uitklapbare secties voor niet-functionele eisen, zijn toegevoegd om de inhoud boeiender en minder overweldigend te maken dan een statische lap tekst. Een bewerkingsfunctionaliteit per sectie, vergelijkbaar met een flat-file CMS, is toegevoegd waarbij wijzigingen lokaal worden opgeslagen in de browser (localStorage). Nu is ook de mogelijkheid toegevoegd om deze lokale data te exporteren als JSON-bestand en te importeren, ter ondersteuning van handmatig beheer via bijvoorbeeld Google Drive. Ten slotte zijn er exportfuncties toegevoegd voor de gehele pagina naar HTML en PDF (via de browser printfunctie). Dit bevordert actieve verkenking, personalisatie, basispersistentie en de mogelijkheid tot delen. -->
+    <!-- Visualization & Content Choices: 
+        - Rapport Info: Template Structuur -> Doel: Navigatie en overzicht -> Presentatie: Vaste zijbalk navigatie -> Interactie: Klik om naar sectie te scrollen -> Rechtvaardiging: Biedt een constant overzicht en snelle toegang, wat essentieel is voor een lang document. Methode: HTML/JS.
+        - Rapport Info: Functionele Eisen (User Story vs. Use Case) -> Doel: Vergelijken van twee methoden -> Presentatie: Twee aparte contentblokken -> Interactie: Knoppen om te wisselen tussen de twee weergaven -> Rechtvaardiging: Maakt een directe vergelijking mogelijk en vermindert de hoeveelheid zichtbare informatie, wat de complexiteit verlaagt. Methode: HTML/JS.
+        - Rapport Info: Niet-Functionele Eisen -> Doel: Organiseren van subcategorieën -> Presentatie: Uitklapbare accordeon-elementen -> Interactie: Klik om details te tonen/verbergen -> Rechtvaardiging: Groepeert gerelateerde informatie op een compacte manier, waardoor de gebruiker zich kan focussen op één categorie tegelijk. Methode: HTML/JS.
+        - Rapport Info: Gegevensmodel (ERD) -> Doel: Visualiseren van relaties -> Presentatie: Diagram opgebouwd uit HTML-divs en CSS-randen -> Interactie: Geen (statische visualisatie) -> Rechtvaardiging: Biedt een visuele representatie zonder gebruik te maken van verboden SVG- of afbeeldingsbestanden. Methode: HTML/CSS.
+        - Bewerken van content -> Doel: Personalisatie en aanpasbaarheid -> Presentatie: Inline bewerkingsvelden (textarea, input) -> Interactie: Bewerkingsknoppen (Edit, Opslaan, Annuleren) en localStorage voor persistentie -> Rechtvaardiging: Biedt de gebruiker de mogelijkheid de template direct aan te passen en op te slaan, waardoor het een dynamisch "flat-file CMS" wordt. Methode: HTML/JS met localStorage.
+        - Opslaan/Laden van data -> Doel: Persistentie en mobiliteit van bewerkte content -> Presentatie: Download/Upload knoppen en bestandskiezer -> Interactie: Klik om JSON te downloaden; selecteer JSON om te laden -> Rechtvaardiging: Maakt het mogelijk om de bewerkte template te bewaren en te delen als een discreet bestand, wat de "flat file" aard versterkt en handmatige integratie met cloudopslag zoals Google Drive mogelijk maakt. Methode: HTML/JS met Blob/FileReader.
+        - Exporteren van pagina -> Doel: Delen en archiveren van de gehele content -> Presentatie: Knappen voor PDF en HTML export -> Interactie: Klik om te printen (PDF) of HTML te downloaden -> Rechtvaardiging: Biedt gebruikers de mogelijkheid om de complete, op dat moment zichtbare, content van de applicatie op te slaan in een standaardformaat voor offline gebruik of externe deelplatforms. Methode: window.print() en Blob/URL.createObjectURL.
+        - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .erd-table {
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            width: 200px;
+        }
+        .erd-line {
+            position: absolute;
+            background-color: #94a3b8;
+            z-index: 0;
+        }
+        .sidebar-link.active {
+            background-color: #e0f2fe;
+            color: #0c4a6e;
+            font-weight: 600;
+        }
+        .edit-buttons {
+            display: none;
+        }
+        .edit-mode .edit-buttons {
+            display: flex;
+        }
+        .edit-mode .view-mode-elements {
+            display: none;
+        }
+        .edit-mode .edit-mode-elements {
+            display: block;
+        }
+        .view-mode-elements {
+            display: block;
+        }
+        .edit-mode-elements {
+            display: none;
+        }
+        textarea, input[type="text"] {
+            @apply w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500;
+        }
+        @media print {
+            aside, .edit-buttons, .edit-btn, .flex.space-x-2.mb-4, .flex.flex-col.sm\:flex-row.justify-end {
+                display: none !important;
+            }
+            main {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .max-w-4xl {
+                max-width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+    <div class="flex min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-white border-r border-slate-200 p-5 fixed top-0 left-0 h-full hidden md:block">
+            <h1 class="text-xl font-bold text-sky-800 mb-6">Functioneel Ontwerp</h1>
+            <nav id="sidebar-nav" class="space-y-2">
+                <a href="#introductie" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">1. Introductie</a>
+                <a href="#overzicht" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">2. Overzicht</a>
+                <a href="#functionele-eisen" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">3. Functionele Eisen</a>
+                <a href="#niet-functionele-eisen" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">4. Niet-Functionele Eisen</a>
+                <a href="#gegevensmodel" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">5. Gegevensmodel</a>
+                <a href="#systeemintegraties" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">6. Systeemintegraties</a>
+                <a href="#ui-ux" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">7. UI & UX</a>
+                <a href="#foutafhandeling" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">8. Foutafhandeling</a>
+                <a href="#testgevallen" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">9. Testgevallen</a>
+                <a href="#open-vragen" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">10. Open Vragen & Aannames</a>
+                <a href="#woordenlijst" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">11. Woordenlijst</a>
+                <a href="#revisiegeschiedenis" class="sidebar-link block px-4 py-2 text-sm text-slate-600 hover:bg-slate-100 rounded-md">12. Revisiegeschiedenis</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 p-6 md:p-10">
+            <div class="max-w-4xl mx-auto space-y-12">
+                <div class="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 mb-8">
+                    <button id="download-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700">Download Content (JSON)</button>
+                    <input type="file" id="upload-input" class="hidden" accept=".json">
+                    <button id="upload-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-indigo-600 text-white hover:bg-indigo-700">Upload Content (JSON)</button>
+                    <button id="export-html-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-purple-600 text-white hover:bg-purple-700">Export as HTML</button>
+                    <button id="print-pdf-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-red-600 text-white hover:bg-red-700">Print / Export as PDF</button>
+                </div>
+
+                <!-- Section 1 -->
+                <section id="introductie" class="editable-section" data-section-id="introductie">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">1. Introductie</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="introductie-main-paragraph">Dit is het startpunt van het functioneel ontwerp. In deze sectie wordt het doel, de doelgroep en de scope van het document en de softwareoplossing gedefinieerd. Het legt de basis voor alle volgende secties en zorgt ervoor dat alle belanghebbenden op één lijn zitten.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="introductie-main-paragraph"></textarea>
+
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <h3 class="font-semibold text-slate-700 view-mode-elements" data-key="introductie-1-1-title">1.1 Doel van dit document</h3>
+                            <input type="text" class="edit-mode-elements" data-key="introductie-1-1-title">
+                            <p class="text-sm text-slate-500 view-mode-elements" data-key="introductie-1-1-description">Beschrijft de functionaliteiten, gedragingen en gebruikersinteracties van de [Naam Software Oplossing]. Dient als specificatie voor ontwikkeling en validatie.</p>
+                            <textarea class="text-sm edit-mode-elements" data-key="introductie-1-1-description"></textarea>
+                        </div>
+                        <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <h3 class="font-semibold text-slate-700 view-mode-elements" data-key="introductie-1-2-title">1.2 Doelgroep</h3>
+                            <input type="text" class="edit-mode-elements" data-key="introductie-1-2-title">
+                            <p class="text-sm text-slate-500 view-mode-elements" data-key="introductie-1-2-description">Projectmanagers, Analisten, Ontwikkelaars, Testers, Stakeholders.</p>
+                            <textarea class="text-sm edit-mode-elements" data-key="introductie-1-2-description"></textarea>
+                        </div>
+                         <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <h3 class="font-semibold text-slate-700 view-mode-elements" data-key="introductie-1-3-title">1.3 Scope</h3>
+                            <input type="text" class="edit-mode-elements" data-key="introductie-1-3-title">
+                            <p class="text-sm text-slate-500 view-mode-elements" data-key="introductie-1-3-description">Een korte samenvatting van wat de softwareoplossing wel (in scope) en niet (out of scope) zal doen.</p>
+                            <textarea class="text-sm edit-mode-elements" data-key="introductie-1-3-description"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2 -->
+                <section id="overzicht" class="editable-section" data-section-id="overzicht">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">2. Overzicht van de Oplossing</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="overzicht-main-paragraph">Deze sectie geeft een helikopterview van de oplossing. Hier worden de visie, de algemene functionaliteiten en de belangrijkste gebruikers (persona's) beschreven. Dit helpt om de context en de waarde van de software te begrijpen.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="overzicht-main-paragraph"></textarea>
+                    
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="bg-white p-4 rounded-lg border border-slate-200">
+                             <h3 class="font-semibold text-slate-700 view-mode-elements" data-key="overzicht-2-3-title">2.3 Voorbeeld Persona</h3>
+                             <input type="text" class="edit-mode-elements" data-key="overzicht-2-3-title">
+                             <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Naam:</p>
+                             <p class="text-sm text-slate-500 view-mode-elements" data-key="overzicht-persona-name">Anna, de Projectmanager</p>
+                             <input type="text" class="edit-mode-elements" data-key="overzicht-persona-name">
+
+                             <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Doelen:</p>
+                             <p class="text-sm text-slate-500 view-mode-elements" data-key="overzicht-persona-goals">Wil een duidelijk overzicht van de projectstatus en de voortgang van taken.</p>
+                             <textarea class="text-sm edit-mode-elements" data-key="overzicht-persona-goals"></textarea>
+
+                             <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Pijnpunten:</p>
+                             <p class="text-sm text-slate-500 view-mode-elements" data-key="overzicht-persona-painpoints">Heeft moeite om informatie uit verschillende systemen te consolideren, wat leidt tot vertragingen.</p>
+                             <textarea class="text-sm edit-mode-elements" data-key="overzicht-persona-painpoints"></textarea>
+                        </div>
+                         <div class="bg-white p-4 rounded-lg border border-slate-200">
+                            <h3 class="font-semibold text-slate-700 view-mode-elements" data-key="overzicht-2-1-title">2.1 Visie en Missie</h3>
+                            <input type="text" class="edit-mode-elements" data-key="overzicht-2-1-title">
+                            <p class="text-sm text-slate-500 mt-2 view-mode-elements" data-key="overzicht-2-1-description">Beschrijf hier de overkoepelende visie van de software.</p>
+                            <textarea class="text-sm edit-mode-elements" data-key="overzicht-2-1-description"></textarea>
+
+                             <h3 class="font-semibold text-slate-700 mt-4 view-mode-elements" data-key="overzicht-2-2-title">2.2 Algemene Functionaliteit</h3>
+                             <input type="text" class="edit-mode-elements" data-key="overzicht-2-2-title">
+                            <p class="text-sm text-slate-500 mt-2 view-mode-elements" data-key="overzicht-2-2-description">Geef hier een high-level overzicht van de kernfuncties.</p>
+                            <textarea class="text-sm edit-mode-elements" data-key="overzicht-2-2-description"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3 -->
+                <section id="functionele-eisen" class="editable-section" data-section-id="functionele-eisen">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">3. Functionele Eisen</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="functionele-eisen-main-paragraph">Dit is het hart van het functioneel ontwerp. Hier wordt gedetailleerd beschreven *wat* het systeem moet doen. U kunt kiezen tussen User Stories (gericht op gebruikerswaarde) of Use Cases (gericht op interactiestappen). Gebruik de knoppen hieronder om tussen de twee voorbeelden te schakelen.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="functionele-eisen-main-paragraph"></textarea>
+                    
+                    <div class="flex space-x-2 mb-4">
+                        <button id="show-user-stories" class="px-4 py-2 text-sm font-medium rounded-md bg-sky-600 text-white">Toon User Stories</button>
+                        <button id="show-use-cases" class="px-4 py-2 text-sm font-medium rounded-md bg-white border border-slate-300 text-slate-700">Toon Use Cases</button>
+                    </div>
+
+                    <div id="user-stories-content">
+                        <div class="bg-sky-50 border-l-4 border-sky-500 p-4 rounded-r-lg space-y-4">
+                            <h4 class="font-bold view-mode-elements" data-key="us-001-title">US-001: Gebruikersregistratie</h4>
+                            <input type="text" class="edit-mode-elements" data-key="us-001-title">
+                            <p class="view-mode-elements" data-key="us-001-description">"**Als een** nieuwe gebruiker, **wil ik** mij kunnen registreren, **zodat ik** toegang krijg tot de applicatie."</p>
+                            <textarea class="edit-mode-elements" data-key="us-001-description"></textarea>
+                            <div>
+                                <h5 class="font-semibold view-mode-elements" data-key="us-001-criteria-title">Acceptatiecriteria:</h5>
+                                <input type="text" class="edit-mode-elements" data-key="us-001-criteria-title">
+                                <ul class="list-disc list-inside text-sm text-slate-600">
+                                    <li class="view-mode-elements" data-key="us-001-criteria-1">Uniek e-mailadres is vereist.</li>
+                                    <textarea class="edit-mode-elements" data-key="us-001-criteria-1"></textarea>
+                                    <li class="view-mode-elements" data-key="us-001-criteria-2">Wachtwoord moet voldoen aan sterkte-eisen.</li>
+                                    <textarea class="edit-mode-elements" data-key="us-001-criteria-2"></textarea>
+                                    <li class="view-mode-elements" data-key="us-001-criteria-3">Gebruiker ontvangt bevestigingsmail.</li>
+                                    <textarea class="edit-mode-elements" data-key="us-001-criteria-3"></textarea>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="use-cases-content" class="hidden">
+                         <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
+                            <h4 class="font-bold view-mode-elements" data-key="uc-001-title">UC-001: Bestelling Plaatsen</h4>
+                            <input type="text" class="edit-mode-elements" data-key="uc-001-title">
+                            <div class="text-sm space-y-2 mt-2">
+                               <p><strong class="text-teal-800 view-mode-elements">Actor:</strong> <span class="view-mode-elements" data-key="uc-001-actor">Klant</span></p>
+                               <input type="text" class="edit-mode-elements" data-key="uc-001-actor">
+
+                               <p><strong class="text-teal-800 view-mode-elements">Doel:</strong> <span class="view-mode-elements" data-key="uc-001-goal">Een of meerdere producten bestellen en afrekenen.</span></p>
+                               <textarea class="edit-mode-elements" data-key="uc-001-goal"></textarea>
+                               <div>
+                                   <h5 class="font-semibold view-mode-elements" data-key="uc-001-main-flow-title">Hoofd Stroom:</h5>
+                                   <input type="text" class="edit-mode-elements" data-key="uc-001-main-flow-title">
+                                   <ol class="list-decimal list-inside text-slate-600">
+                                       <li class="view-mode-elements" data-key="uc-001-step-1">Klant navigeert naar winkelwagen.</li>
+                                       <textarea class="edit-mode-elements" data-key="uc-001-step-1"></textarea>
+                                       <li class="view-mode-elements" data-key="uc-001-step-2">Klant klikt op "Afrekenen".</li>
+                                       <textarea class="edit-mode-elements" data-key="uc-001-step-2"></textarea>
+                                       <li class="view-mode-elements" data-key="uc-001-step-3">Systeem verwerkt betaling.</li>
+                                       <textarea class="edit-mode-elements" data-key="uc-001-step-3"></textarea>
+                                       <li class="view-mode-elements" data-key="uc-001-step-4">Systeem genereert orderbevestiging.</li>
+                                       <textarea class="edit-mode-elements" data-key="uc-001-step-4"></textarea>
+                                   </ol>
+                               </div>
+                            </div>
+                         </div>
+                    </div>
+                </section>
+                
+                <!-- Section 4 -->
+                <section id="niet-functionele-eisen" class="editable-section" data-section-id="niet-functionele-eisen">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">4. Niet-Functionele Eisen</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="nfr-main-paragraph">Deze sectie beschrijft *hoe goed* het systeem moet functioneren. Dit omvat aspecten als prestaties, beveiliging en betrouwbaarheid. Deze eisen zijn cruciaal voor de algehele kwaliteit en gebruikerservaring. Klik op de categorieën om de voorbeelden te bekijken.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="nfr-main-paragraph"></textarea>
+                    <div id="nfr-accordion" class="space-y-2">
+                        <div class="bg-white border border-slate-200 rounded-lg">
+                            <button class="accordion-toggle w-full flex justify-between items-center p-4 text-left font-semibold view-mode-elements">
+                                <span data-key="nfr-4-1-title">4.1 Prestatie</span>
+                                <span class="accordion-icon transform transition-transform">▼</span>
+                            </button>
+                            <div class="edit-mode-elements p-4">
+                                <input type="text" class="mb-2" data-key="nfr-4-1-title">
+                            </div>
+                            <div class="accordion-content hidden p-4 border-t border-slate-200">
+                                <p class="text-sm text-slate-600 mb-2 view-mode-elements" data-key="nfr-4-1-description">Eisen met betrekking tot snelheid en schaalbaarheid.</p>
+                                <textarea class="text-sm edit-mode-elements" data-key="nfr-4-1-description"></textarea>
+                                <ul class="list-disc list-inside text-sm text-slate-500">
+                                    <li class="view-mode-elements" data-key="nfr-4-1-item-1">**Responsietijden:** Pagina's laden binnen 2 seconden.</li>
+                                    <textarea class="edit-mode-elements" data-key="nfr-4-1-item-1"></textarea>
+                                    <li class="view-mode-elements" data-key="nfr-4-1-item-2">**Schaalbaarheid:** Systeem ondersteunt 500 gelijktijdige gebruikers.</li>
+                                    <textarea class="edit-mode-elements" data-key="nfr-4-1-item-2"></textarea>
+                                </ul>
+                                <div class="chart-container mt-4">
+                                    <canvas id="performanceChart"></canvas>
+                                </div>
+                                <p class="text-center text-xs text-slate-400 mt-2 view-mode-elements" data-key="nfr-4-1-chart-caption">Voorbeeld: Een grafiek kan de laadtijd van pagina's visualiseren.</p>
+                                <textarea class="edit-mode-elements" data-key="nfr-4-1-chart-caption"></textarea>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-slate-200 rounded-lg">
+                            <button class="accordion-toggle w-full flex justify-between items-center p-4 text-left font-semibold view-mode-elements">
+                                <span data-key="nfr-4-2-title">4.2 Beveiliging</span>
+                                <span class="accordion-icon transform transition-transform">▼</span>
+                            </button>
+                            <div class="edit-mode-elements p-4">
+                                <input type="text" class="mb-2" data-key="nfr-4-2-title">
+                            </div>
+                            <div class="accordion-content hidden p-4 border-t border-slate-200">
+                                <p class="text-sm text-slate-600 mb-2 view-mode-elements" data-key="nfr-4-2-description">Eisen om het systeem en de data te beschermen.</p>
+                                <textarea class="text-sm edit-mode-elements" data-key="nfr-4-2-description"></textarea>
+                                <ul class="list-disc list-inside text-sm text-slate-500">
+                                    <li class="view-mode-elements" data-key="nfr-4-2-item-1">**Authenticatie:** Multi-factor authenticatie is verplicht voor beheerders.</li>
+                                    <textarea class="edit-mode-elements" data-key="nfr-4-2-item-1"></textarea>
+                                    <li class="view-mode-elements" data-key="nfr-4-2-item-2">**Autorisatie:** Gebruikers hebben alleen toegang tot hun eigen data.</li>
+                                    <textarea class="edit-mode-elements" data-key="nfr-4-2-item-2"></textarea>
+                                    <li class="view-mode-elements" data-key="nfr-4-2-item-3">**Gegevensversleuteling:** Gevoelige data wordt versleuteld opgeslagen (at-rest).</li>
+                                    <textarea class="edit-mode-elements" data-key="nfr-4-2-item-3"></textarea>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5 -->
+                <section id="gegevensmodel" class="editable-section" data-section-id="gegevensmodel">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">5. Gegevensmodel</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                     <p class="mb-4 text-slate-600 view-mode-elements" data-key="gegevensmodel-main-paragraph">Deze sectie definieert de structuur van de data. Het beschrijft de belangrijkste entiteiten (zoals 'Gebruiker' of 'Product') en hoe deze met elkaar in verband staan. Hieronder staat een vereenvoudigde visuele weergave, gemaakt met HTML en CSS.</p>
+                     <textarea class="mb-4 edit-mode-elements" data-key="gegevensmodel-main-paragraph"></textarea>
+
+                     <div class="relative bg-slate-100 p-8 rounded-lg h-96 flex items-center justify-center space-x-24">
+                        <!-- Tables -->
+                        <div class="erd-table z-10">
+                            <h4 class="font-bold border-b pb-1 mb-2 view-mode-elements" data-key="erd-gebruiker-title">Gebruiker</h4>
+                            <input type="text" class="edit-mode-elements" data-key="erd-gebruiker-title">
+                            <ul class="text-sm text-slate-600">
+                                <li class="view-mode-elements" data-key="erd-gebruiker-pk"><strong>gebruiker_id (PK)</strong></li>
+                                <input type="text" class="edit-mode-elements" data-key="erd-gebruiker-pk">
+                                <li class="view-mode-elements" data-key="erd-gebruiker-naam">naam</li>
+                                <input type="text" class="edit-mode-elements" data-key="erd-gebruiker-naam">
+                                <li class="view-mode-elements" data-key="erd-gebruiker-email">email</li>
+                                <input type="text" class="edit-mode-elements" data-key="erd-gebruiker-email">
+                            </ul>
+                        </div>
+                        <div class="erd-table z-10">
+                             <h4 class="font-bold border-b pb-1 mb-2 view-mode-elements" data-key="erd-bestelling-title">Bestelling</h4>
+                             <input type="text" class="edit-mode-elements" data-key="erd-bestelling-title">
+                             <ul class="text-sm text-slate-600">
+                                <li class="view-mode-elements" data-key="erd-bestelling-pk"><strong>bestelling_id (PK)</strong></li>
+                                <input type="text" class="edit-mode-elements" data-key="erd-bestelling-pk">
+                                <li class="view-mode-elements" data-key="erd-bestelling-fk"><em>gebruiker_id (FK)</em></li>
+                                <input type="text" class="edit-mode-elements" data-key="erd-bestelling-fk">
+                                <li class="view-mode-elements" data-key="erd-bestelling-date">besteldatum</li>
+                                <input type="text" class="edit-mode-elements" data-key="erd-bestelling-date">
+                             </ul>
+                        </div>
+                        <!-- Line -->
+                        <div class="erd-line" style="left: 230px; top: 50%; width: 96px; height: 2px;"></div>
+                     </div>
+                </section>
+
+                <!-- Other sections would follow a similar pattern -->
+                 <section id="systeemintegraties" class="editable-section" data-section-id="systeemintegraties">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">6. Systeemintegraties</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="systeemintegraties-main-paragraph">Beschrijft de koppelingen met externe systemen, zoals een betalingsprovider of een e-mailsysteem.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="systeemintegraties-main-paragraph"></textarea>
+                </section>
+                <section id="ui-ux" class="editable-section" data-section-id="ui-ux">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">7. UI & UX</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                     <p class="mb-4 text-slate-600 view-mode-elements" data-key="ui-ux-main-paragraph">Bevat richtlijnen voor het ontwerp en de gebruikerservaring, inclusief verwijzingen naar wireframes.</p>
+                     <textarea class="mb-4 edit-mode-elements" data-key="ui-ux-main-paragraph"></textarea>
+                </section>
+                <section id="foutafhandeling" class="editable-section" data-section-id="foutafhandeling">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">8. Foutafhandeling</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                     <p class="mb-4 text-slate-600 view-mode-elements" data-key="foutafhandeling-main-paragraph">Definieert hoe het systeem reageert op fouten, zowel gebruikersfouten als technische problemen.</p>
+                     <textarea class="mb-4 edit-mode-elements" data-key="foutafhandeling-main-paragraph"></textarea>
+                </section>
+                <section id="testgevallen" class="editable-section" data-section-id="testgevallen">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">9. Testgevallen</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="testgevallen-main-paragraph">Een lijst met voorlopige testscenario's om de functionaliteit te valideren.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="testgevallen-main-paragraph"></textarea>
+                </section>
+                <section id="open-vragen" class="editable-section" data-section-id="open-vragen">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">10. Open Vragen & Aannames</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="open-vragen-main-paragraph">Een overzicht van onduidelijkheden en de aannames die zijn gemaakt tijdens het opstellen van het document.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="open-vragen-main-paragraph"></textarea>
+                </section>
+                 <section id="woordenlijst" class="editable-section" data-section-id="woordenlijst">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">11. Woordenlijst</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="woordenlijst-main-paragraph">Definities van specifieke termen om eenduidigheid te garanderen.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="woordenlijst-main-paragraph"></textarea>
+                </section>
+                <section id="revisiegeschiedenis" class="editable-section" data-section-id="revisiegeschiedenis">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold border-b border-slate-300 pb-2 flex-grow">12. Revisiegeschiedenis</h2>
+                        <div class="flex space-x-2 edit-buttons">
+                            <button class="save-btn px-3 py-1 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Opslaan</button>
+                            <button class="cancel-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600">Annuleren</button>
+                        </div>
+                        <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
+                    </div>
+                    <p class="mb-4 text-slate-600 view-mode-elements" data-key="revisiegeschiedenis-main-paragraph">Een logboek van wijzigingen aan het document.</p>
+                    <textarea class="mb-4 edit-mode-elements" data-key="revisiegeschiedenis-main-paragraph"></textarea>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white text-sm rounded-lg border border-slate-200">
+                            <thead class="bg-slate-100">
+                                <tr>
+                                    <th class="p-3 text-left font-semibold">Versie</th>
+                                    <th class="p-3 text-left font-semibold">Datum</th>
+                                    <th class="p-3 text-left font-semibold">Auteur</th>
+                                    <th class="p-3 text-left font-semibold">Beschrijving</th>
+                                </tr>
+                            </thead>
+                            <tbody class="view-mode-elements" data-key="revisiegeschiedenis-table-body">
+                                <tr class="border-t">
+                                    <td class="p-3">0.1</td>
+                                    <td class="p-3">[Datum]</td>
+                                    <td class="p-3">[Naam]</td>
+                                    <td class="p-3">Eerste concept</td>
+                                </tr>
+                                 <tr class="border-t">
+                                    <td class="p-3">1.0</td>
+                                    <td class="p-3">[Datum]</td>
+                                    <td class="p-3">[Naam]</td>
+                                    <td class="p-3">Definitieve versie</td>
+                                </tr>
+                            </tbody>
+                            <tbody class="edit-mode-elements" data-key="revisiegeschiedenis-table-body">
+                                <!-- Editable rows will be dynamically added/managed by JS -->
+                                <tr class="border-t">
+                                    <td class="p-3"><input type="text" data-key="revisie-0-version" value="0.1"></td>
+                                    <td class="p-3"><input type="text" data-key="revisie-0-date" value="[Datum]"></td>
+                                    <td class="p-3"><input type="text" data-key="revisie-0-author" value="[Naam]"></td>
+                                    <td class="p-3"><input type="text" data-key="revisie-0-description" value="Eerste concept"></td>
+                                </tr>
+                                <tr class="border-t">
+                                    <td class="p-3"><input type="text" data-key="revisie-1-version" value="1.0"></td>
+                                    <td class="p-3"><input type="text" data-key="revisie-1-date" value="[Datum]"></td>
+                                    <td class="p-3"><input type="text" data-key="revisie-1-author" value="[Naam]"></td>
+                                    <td class="p-3"><input type="text" data-key="revisie-1-description" value="Definitieve versie"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let dataStore = JSON.parse(localStorage.getItem('foTemplateData')) || {};
+            let originalSectionData = {}; // Om data op te slaan bij het betreden van de bewerkmodus voor annulering
+
+            // Functie om content te laden vanuit dataStore (localStorage)
+            const loadContent = () => {
+                document.querySelectorAll('[data-key]').forEach(element => {
+                    const key = element.dataset.key;
+                    if (dataStore[key]) {
+                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                            element.value = dataStore[key];
+                        } else {
+                            element.innerHTML = dataStore[key];
+                        }
+                    }
+                });
+            };
+
+            // Functie om bewerkmodus in te schakelen voor een sectie
+            const enableEditMode = (section) => {
+                const sectionId = section.dataset.sectionId;
+                section.classList.add('edit-mode');
+                
+                originalSectionData[sectionId] = {}; // Sla originele waarden op voor annulering
+                section.querySelectorAll('[data-key]').forEach(element => {
+                    const key = element.dataset.key;
+                    if (element.classList.contains('view-mode-elements')) { // Sla content van de kijkmodus op
+                        originalSectionData[sectionId][key] = element.innerHTML;
+                    }
+                    if (element.classList.contains('edit-mode-elements')) { // Vul bewerkmodus inputvelden
+                         if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                            const viewElement = section.querySelector(`.view-mode-elements[data-key="${key}"]`);
+                            if (viewElement) {
+                                element.value = viewElement.innerHTML; // Neem content van kijkmodus
+                            }
+                         }
+                    }
+                });
+            };
+
+            // Functie om bewerkmodus uit te schakelen voor een sectie (en op te slaan indien `shouldSave` true is)
+            const disableEditMode = (section, shouldSave) => {
+                const sectionId = section.dataset.sectionId;
+                section.classList.remove('edit-mode');
+
+                section.querySelectorAll('[data-key]').forEach(element => {
+                    const key = element.dataset.key;
+                    if (element.classList.contains('edit-mode-elements')) {
+                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                            if (shouldSave) {
+                                dataStore[key] = element.value;
+                            } else if (originalSectionData[sectionId] && originalSectionData[sectionId][key]) {
+                                // Herstel originele content indien geannuleerd
+                                element.value = originalSectionData[sectionId][key];
+                            }
+                        }
+                    }
+                });
+                // Na het potentieel opslaan, update de kijk-elementen met de huidige dataStore content
+                section.querySelectorAll('[data-key]').forEach(element => {
+                    const key = element.dataset.key;
+                    if (element.classList.contains('view-mode-elements')) {
+                        if (dataStore[key]) {
+                            element.innerHTML = dataStore[key];
+                        } else if (originalSectionData[sectionId] && originalSectionData[sectionId][key] && !shouldSave) {
+                            element.innerHTML = originalSectionData[sectionId][key]; // Herstel kijk-content bij annuleren
+                        }
+                    }
+                });
+                if (shouldSave) {
+                    localStorage.setItem('foTemplateData', JSON.stringify(dataStore));
+                }
+                delete originalSectionData[sectionId]; // Opschonen van originele data
+            };
+
+            // Voeg event listeners toe voor bewerk/opslaan/annuleren knoppen
+            document.querySelectorAll('.editable-section').forEach(section => {
+                const editBtn = section.querySelector('.edit-btn');
+                const saveBtn = section.querySelector('.save-btn');
+                const cancelBtn = section.querySelector('.cancel-btn');
+
+                editBtn.addEventListener('click', () => enableEditMode(section));
+                saveBtn.addEventListener('click', () => disableEditMode(section, true));
+                cancelBtn.addEventListener('click', () => disableEditMode(section, false));
+            });
+
+            // Functional Requirements Toggle
+            const showUserStoriesBtn = document.getElementById('show-user-stories');
+            const showUseCasesBtn = document.getElementById('show-use-cases');
+            const userStoriesContent = document.getElementById('user-stories-content');
+            const useCasesContent = document.getElementById('use-cases-content');
+
+            showUserStoriesBtn.addEventListener('click', () => {
+                userStoriesContent.classList.remove('hidden');
+                useCasesContent.classList.add('hidden');
+                showUserStoriesBtn.classList.add('bg-sky-600', 'text-white');
+                showUserStoriesBtn.classList.remove('bg-white', 'border', 'border-slate-300', 'text-slate-700');
+                showUseCasesBtn.classList.add('bg-white', 'border', 'border-slate-300', 'text-slate-700');
+                showUseCasesBtn.classList.remove('bg-sky-600', 'text-white');
+            });
+
+            showUseCasesBtn.addEventListener('click', () => {
+                useCasesContent.classList.remove('hidden');
+                userStoriesContent.classList.add('hidden');
+                showUseCasesBtn.classList.add('bg-sky-600', 'text-white');
+                showUseCasesBtn.classList.remove('bg-white', 'border', 'border-slate-300', 'text-slate-700');
+                showUserStoriesBtn.classList.add('bg-white', 'border', 'border-slate-300', 'text-slate-700');
+                showUserStoriesBtn.classList.remove('bg-sky-600', 'text-white');
+            });
+            
+            // Accordeon
+            const accordionToggles = document.querySelectorAll('.accordion-toggle');
+            accordionToggles.forEach(toggle => {
+                toggle.addEventListener('click', () => {
+                    const content = toggle.nextElementSibling;
+                    const icon = toggle.querySelector('.accordion-icon');
+                    content.classList.toggle('hidden');
+                    icon.classList.toggle('rotate-180');
+                });
+            });
+
+            // Zijbalk Actieve Status bij Scrollen
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('#sidebar-nav a');
+            
+            const activateLink = (id) => {
+                 navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if(link.getAttribute('href') === `#${id}`) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        activateLink(entry.target.id);
+                    }
+                });
+            }, { rootMargin: '-30% 0px -70% 0px', threshold: 0 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+            
+            // Prestatie Grafiek Voorbeeld
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Pagina A', 'Pagina B', 'Pagina C', 'API Call X', 'API Call Y'],
+                    datasets: [{
+                        label: 'Laadtijd (ms)',
+                        data: [850, 1100, 920, 450, 600],
+                        backgroundColor: 'rgba(56, 189, 248, 0.6)',
+                        borderColor: 'rgba(2, 132, 199, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.parsed.y} ms`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Functie om data te downloaden als JSON
+            const downloadData = () => {
+                const dataStr = JSON.stringify(dataStore, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'functioneel_ontwerp_data.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // Functie om data te uploaden vanaf een JSON-bestand
+            const uploadData = (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        try {
+                            const uploadedData = JSON.parse(e.target.result);
+                            dataStore = { ...dataStore, ...uploadedData }; // Merge uploaded data
+                            localStorage.setItem('foTemplateData', JSON.stringify(dataStore));
+                            loadContent(); // Herlaad de content in de browser
+                            alert('Bestand succesvol geladen!');
+                        } catch (error) {
+                            alert('Fout bij het lezen van het bestand: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+
+            // Functie om de pagina als HTML te exporteren
+            const exportHtml = () => {
+                // Ensure all editable sections are in view mode before export
+                document.querySelectorAll('.editable-section.edit-mode').forEach(section => {
+                    disableEditMode(section, false); // Cancel any ongoing edits
+                });
+
+                const htmlContent = document.documentElement.outerHTML;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'functioneel_ontwerp.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            };
+
+            // Functie om de pagina te printen / als PDF op te slaan
+            const printPdf = () => {
+                 // Ensure all editable sections are in view mode before print
+                document.querySelectorAll('.editable-section.edit-mode').forEach(section => {
+                    disableEditMode(section, false); // Cancel any ongoing edits
+                });
+                window.print();
+            };
+
+
+            // Voeg event listeners toe aan de download en upload knoppen
+            document.getElementById('download-btn').addEventListener('click', downloadData);
+            document.getElementById('upload-btn').addEventListener('click', () => {
+                document.getElementById('upload-input').click();
+            });
+            document.getElementById('upload-input').addEventListener('change', uploadData);
+            document.getElementById('export-html-btn').addEventListener('click', exportHtml);
+            document.getElementById('print-pdf-btn').addEventListener('click', printPdf);
+
+            // Zorg ervoor dat de content correct wordt geladen bij de start
+            loadContent();
+        });
+    </script>
+</body>
+</html>
