@@ -10,15 +10,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Kalm Neutraal Palet -->
-    <!-- Application Structure Plan: De applicatie is gestructureerd als een single-page applicatie met een vaste navigatiezijbalk aan de left-kant en een scrollbaar contentgebied aan de rechterkant. Deze dashboard-achtige opzet is gekozen omdat het een directe, duidelijke en vertrouwde manier biedt om door een gestructureerd document zoals een functioneel ontwerp te navigeren. Gebruikers kunnen direct naar elke sectie springen zonder te hoeven scrollen. Interactieve elementen, zoals toggles voor User Stories/Use Cases en uitklapbare secties voor niet-functionele eisen, zijn toegevoegd om de inhoud boeiender en minder overweldigend te maken dan een statische lap tekst. Een bewerkingsfunctionaliteit per sectie, vergelijkbaar met een flat-file CMS, is toegevoegd waarbij wijzigingen lokaal worden opgeslagen in de browser (localStorage). Nu is ook de mogelijkheid toegevoegd om deze lokale data te exporteren als JSON-bestand en te importeren, ter ondersteuning van handmatig beheer via bijvoorbeeld Google Drive. Ten slotte zijn er exportfuncties toegevoegd voor de gehele pagina naar HTML en PDF (via de browser printfunctie). Dit bevordert actieve verkenking, personalisatie, basispersistentie en de mogelijkheid tot delen. -->
+    <!-- Application Structure Plan: De applicatie is gestructureerd als een single-page applicatie met een vaste navigatiezijbalk aan de left-kant en een scrollbaar contentgebied aan de rechterkant. Deze dashboard-achtige opzet is gekozen omdat het een directe, duidelijke en vertrouwde manier biedt om door een gestructureerd document zoals een functioneel ontwerp te navigeren. Gebruikers kunnen direct naar elke sectie springen zonder te hoeven scrollen. Interactieve elementen, zoals toggles voor User Stories/Use Cases en uitklapbare secties voor niet-functionele eisen, zijn toegevoegd om de inhoud boeiender en minder overweldigend te maken dan een statische lap tekst. Een bewerkingsfunctionaliteit per sectie, vergelijkbaar met een flat-file CMS, is toegevoegd waarbij wijzigingen lokaal worden opgeslagen in de browser (localStorage). Nu is ook de mogelijkheid toegevoegd om deze lokale data te exporteren als JSON-bestand en te importeren, ter ondersteuning van handmatig beheer via bijvoorbeeld Google Drive. Ten slotte zijn er exportfuncties toegevoegd voor de gehele pagina naar HTML en PDF (via de browser printfunctie). Elk individueel veld is nu apart aanpasbaar, inclusief dynamische rijen in de revisiegeschiedenis, de items in de lijsten onder niet-functionele eisen, en dynamische toevoeging/verwijdering van persona's en entiteiten/attributen in het gegevensmodel. De koppen van de niet-functionele eisen zijn nu gestructureerd als titel/beschrijving blokken, vergelijkbaar met de introductiesectie. De grafiek onder 4.1 Prestatie is verwijderd. Een "ongedaan maken" functionaliteit voor het verwijderen van items en gehele categorieën in de niet-functionele eisen is toegevoegd, inclusief automatisch hernummeren. Alle bewerkbare velden (input/textarea) zijn geoptimaliseerd om de maximale breedte van hun respectievelijke containers te benutten in de bewerkmodus. Specifiek vullen de ERD-tabellen nu de volledige breedte in bewerkmodus. In het gegevensmodel kunnen nu relaties tussen entiteiten worden gedefinieerd en gevisualiseerd met pijlen op een canvas, inclusief labels en richting, die altijd zichtbaar zijn en nu het label direct op de pijl weergeven. Dit bevordert actieve verkenning, personalisatie, basispersistentie en de mogelijkheid tot delen. -->
     <!-- Visualization & Content Choices: 
         - Rapport Info: Template Structuur -> Doel: Navigatie en overzicht -> Presentatie: Vaste zijbalk navigatie -> Interactie: Klik om naar sectie te scrollen -> Rechtvaardiging: Biedt een constant overzicht en snelle toegang, wat essentieel is voor een lang document. Methode: HTML/JS.
-        - Rapport Info: Functionele Eisen (User Story vs. Use Case) -> Doel: Vergelijken van twee methoden -> Presentatie: Twee aparte contentblokken -> Interactie: Knoppen om te wisselen tussen de twee weergaven -> Rechtvaardiging: Maakt een directe vergelijking mogelijk en vermindert de hoeveelheid zichtbare informatie, wat de complexiteit verlaagt. Methode: HTML/JS.
-        - Rapport Info: Niet-Functionele Eisen -> Doel: Organiseren van subcategorieën -> Presentatie: Uitklapbare accordeon-elementen -> Interactie: Klik om details te tonen/verbergen -> Rechtvaardiging: Groepeert gerelateerde informatie op een compacte manier, waardoor de gebruiker zich kan focussen op één categorie tegelijk. Methode: HTML/JS.
-        - Rapport Info: Gegevensmodel (ERD) -> Doel: Visualiseren van relaties -> Presentatie: Diagram opgebouwd uit HTML-divs en CSS-randen -> Interactie: Geen (statische visualisatie) -> Rechtvaardiging: Biedt een visuele representatie zonder gebruik te maken van verboden SVG- of afbeeldingsbestanden. Methode: HTML/CSS.
-        - Bewerken van content -> Doel: Personalisatie en aanpasbaarheid -> Presentatie: Inline bewerkingsvelden (textarea, input) -> Interactie: Bewerkingsknoppen (Edit, Opslaan, Annuleren) en localStorage voor persistentie -> Rechtvaardiging: Biedt de gebruiker de mogelijkheid de template direct aan te passen en op te slaan, waardoor het een dynamisch "flat-file CMS" wordt. Methode: HTML/JS met localStorage.
+        - Rapport Info: Functionaliteit Vergelijken (User Story vs. Use Case) -> Doel: Duidelijke vergelijking en keuze -> Presentatie: Twee aparte, schakelbare contentblokken -> Interactie: Knoppen om te wisselen -> Rechtvaardiging: Vermindert cognitieve belasting en stelt gebruiker in staat om alternatieven te evalueren. Methode: HTML/JS.
+        - Rapport Info: Niet-Functionele Eisen -> Doel: Organiseren van subcategorieën en gedetailleerde aanpassing -> Presentatie: Uitklapbare accordeon-elementen. Elke accordion-sectie heeft nu een hoofd-h3-titel en beschrijvende paragraaf die individueel bewerkbaar zijn, vergelijkbaar met de introductiesecties. Daaronder volgen dynamische, bewerkbare lijstitems (toevoegen/verwijderen, inclusief 'ongedaan maken' van laatste verwijdering). Nieuwe functionaliteit: gehele categorieën kunnen worden verwijderd en hernummerd, met een 'ongedaan maken' optie voor categorieën. -> Interactie: Klik om details te tonen/verbergen, inline bewerking van alle tekst, toevoegen/verwijderen van items en categorieën, undo-opties -> Rechtvaardiging: Groepeert gerelateerde informatie compact, maakt gedetailleerde aanpassing van specificaties mogelijk, en biedt flexibiliteit in de organisatiestructuur van NFR's met undo-functionaliteit voor gebruiksgemak. Methode: HTML/JS.
+        - Rapport Info: Gegevensmodel (ERD) -> Doel: Gestructureerde weergave van entiteiten en attributen en hun relaties -> Presentatie: Dynamisch gegenereerde entiteitsblokken (tabellen) met bewerkbare titels en attributen, inclusief toevoegen/verwijderen van entiteiten en attributen. Relaties worden gedefinieerd via een formulier en gevisualiseerd als pijlen met labels op een canvas. De pijlen zijn nu *altijd zichtbaar*, ongeacht de bewerkmodus, en tonen het relatie-label direct op de lijn. In edit-modus vullen entiteitstabellen de volledige breedte en worden statische visuele elementen verborgen. -> Interactie: Inline bewerking, toevoegen/verwijderen van entiteiten/attributen, definiëren en verwijderen van relaties -> Rechtvaardiging: Biedt een gestructureerd overzicht van het datamodel en maakt flexibele aanpassing mogelijk van de inhoud en conceptuele relaties, met verbeterde ruimte voor bewerking en een duidelijke, constante visuele representatie van gedefinieerde relaties met inline labels voor betere context. Methode: HTML/CSS/JS voor DOM-manipulatie en Canvas API voor tekenen.
+        - Rapport Info: Persona's -> Doel: Gedetailleerde beschrijving en beheer van gebruikersprofielen -> Presentatie: Dynamisch gegenereerde persona-kaarten met bewerkbare velden en acties (toevoegen/verwijderen) -> Interactie: Inline bewerking, toevoegen/verwijderen van persona's -> Rechtvaardiging: Maakt flexibele aanpassing van gebruikersprofielen mogelijk, wat cruciaal is voor projecten met diverse belanghebbenden. Methode: HTML/JS.
+        - Bewerken van content -> Doel: Personalisatie en aanpasbaarheid -> Presentatie: Inline bewerkingsvelden (textarea, input) die de volledige breedte van hun container innemen -> Interactie: Bewerkingsknoppen (Edit, Opslaan, Annuleren) en localStorage voor persistentie -> Rechtvaardiging: Verbetert de gebruikerservaring door meer ruimte te bieden voor tekstinvoer en zorgt voor lokale opslag van wijzigingen. Methode: HTML/JS met localStorage.
         - Opslaan/Laden van data -> Doel: Persistentie en mobiliteit van bewerkte content -> Presentatie: Download/Upload knoppen en bestandskiezer -> Interactie: Klik om JSON te downloaden; selecteer JSON om te laden -> Rechtvaardiging: Maakt het mogelijk om de bewerkte template te bewaren en te delen als een discreet bestand, wat de "flat file" aard versterkt en handmatige integratie met cloudopslag zoals Google Drive mogelijk maakt. Methode: HTML/JS met Blob/FileReader.
-        - Exporteren van pagina -> Doel: Delen en archiveren van de gehele content -> Presentatie: Knappen voor PDF en HTML export -> Interactie: Klik om te printen (PDF) of HTML te downloaden -> Rechtvaardiging: Biedt gebruikers de mogelijkheid om de complete, op dat moment zichtbare, content van de applicatie op te slaan in een standaardformaat voor offline gebruik of externe deelplatforms. Methode: window.print() en Blob/URL.createObjectURL.
+        - Exporteren van pagina -> Doel: Delen en archiveren van de gehehele content -> Presentatie: Knappen voor PDF en HTML export -> Interactie: Klik om te printen (PDF) of HTML te downloaden -> Rechtvaardiging: Biedt gebruikers de mogelijkheid om de complete, op dat moment zichtbare, content van de applicatie op te slaan in een standaardformaat voor offline gebruik of externe deelplatforms. Methode: window.print() en Blob/URL.createObjectURL.
+        - Revisiegeschiedenis tabel bewerking -> Doel: Gedetailleerde content aanpassing van tabulaire data -> Presentatie: Dynamisch gegenereerde tabelrijen met inputvelden en actieknoppen -> Interactie: Klik om rijen toe te voegen/verwijderen, direct bewerken van cellen -> Rechtvaardiging: Maakt fijnmazige controle over de revisiegeschiedenis mogelijk, wat essentieel is voor versiebeheer in een FO. Methode: HTML/JS DOM manipulatie en localStorage.
         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -44,9 +46,13 @@
             border-radius: 0.5rem;
             padding: 1rem;
             box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-            width: 200px;
+            width: 200px; /* Default width, can be wider in edit mode if content allows */
+            min-width: 180px;
+            display: inline-block; /* For flexible positioning in flex/grid */
+            vertical-align: top; /* Align top when inline-block */
+            margin: 10px; /* Spacing between tables */
         }
-        .erd-line {
+        .erd-line { /* This class is effectively unused now, but kept for historical context */
             position: absolute;
             background-color: #94a3b8;
             z-index: 0;
@@ -74,11 +80,38 @@
         .edit-mode-elements {
             display: none;
         }
-        textarea, input[type="text"] {
+        /* Wider input/textarea in edit mode */
+        textarea, input[type="text"], select { /* Added select for consistency */
             @apply w-full p-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500;
         }
+        /* Adjust width for table inputs in edit mode */
+        .edit-mode table input[type="text"] {
+            width: 100%; /* Make table inputs fill cell */
+            padding: 0.5rem;
+        }
+        /* Make ERD tables fill their parent in edit mode */
+        .edit-mode .erd-table {
+            width: 100%; 
+            max-width: none; /* Override any max-width */
+        }
+        /* Style for the canvas overlay for ERD lines */
+        #erd-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1; /* Below entities */
+        }
+        /* Ensure entities are above canvas */
+        .erd-table {
+            position: relative; /* Ensure z-index works */
+            z-index: 10;
+        }
+
         @media print {
-            aside, .edit-buttons, .edit-btn, .flex.space-x-2.mb-4, .flex.flex-col.sm\:flex-row.justify-end {
+            aside, .edit-buttons, .edit-btn, .flex.space-x-2.mb-4, .flex.flex-col.sm\:flex-row.justify-end, 
+            .revisie-actions, .persona-actions, .nfr-item-actions, .entity-actions, .attribute-actions, 
+            #add-persona-btn, #add-revisie-row, #add-entity-btn, .undo-nfr-item-btn-container,
+            #add-nfr-category-btn-container, #relationships-management { /* Hide relationship management in print */
                 display: none !important;
             }
             main {
@@ -87,6 +120,30 @@
             }
             .max-w-4xl {
                 max-width: 100% !important;
+            }
+            table input[type="text"] {
+                border: none !important;
+                padding: 0 !important;
+                background-color: transparent !important;
+            }
+            ul.list-disc.list-inside li textarea {
+                border: none !important;
+                padding: 0 !important;
+                background-color: transparent !important;
+            }
+            .edit-mode-elements {
+                display: none !important; /* Hide all edit mode elements during print */
+            }
+            .view-mode-elements {
+                display: block !important; /* Ensure view mode elements are visible during print */
+            }
+            /* Make sure canvas (ERD lines) are visible in print */
+            #erd-canvas {
+                display: block !important;
+            }
+            /* Hide static ERD elements during print too, only show dynamic */
+            .erd-line.view-mode-elements, .absolute.text-sm.text-slate-600.view-mode-elements {
+                display: none !important;
             }
         }
     </style>
@@ -171,32 +228,25 @@
                     <p class="mb-4 text-slate-600 view-mode-elements" data-key="overzicht-main-paragraph">Deze sectie geeft een helikopterview van de oplossing. Hier worden de visie, de algemene functionaliteiten en de belangrijkste gebruikers (persona's) beschreven. Dit helpt om de context en de waarde van de software te begrijpen.</p>
                     <textarea class="mb-4 edit-mode-elements" data-key="overzicht-main-paragraph"></textarea>
                     
-                    <div class="grid md:grid-cols-2 gap-4">
+                    <div class="space-y-4">
                         <div class="bg-white p-4 rounded-lg border border-slate-200">
-                             <h3 class="font-semibold text-slate-700 view-mode-elements" data-key="overzicht-2-3-title">2.3 Voorbeeld Persona</h3>
-                             <input type="text" class="edit-mode-elements" data-key="overzicht-2-3-title">
-                             <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Naam:</p>
-                             <p class="text-sm text-slate-500 view-mode-elements" data-key="overzicht-persona-name">Anna, de Projectmanager</p>
-                             <input type="text" class="edit-mode-elements" data-key="overzicht-persona-name">
-
-                             <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Doelen:</p>
-                             <p class="text-sm text-slate-500 view-mode-elements" data-key="overzicht-persona-goals">Wil een duidelijk overzicht van de projectstatus en de voortgang van taken.</p>
-                             <textarea class="text-sm edit-mode-elements" data-key="overzicht-persona-goals"></textarea>
-
-                             <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Pijnpunten:</p>
-                             <p class="text-sm text-slate-500 view-mode-elements" data-key="overzicht-persona-painpoints">Heeft moeite om informatie uit verschillende systemen te consolideren, wat leidt tot vertragingen.</p>
-                             <textarea class="text-sm edit-mode-elements" data-key="overzicht-persona-painpoints"></textarea>
-                        </div>
-                         <div class="bg-white p-4 rounded-lg border border-slate-200">
                             <h3 class="font-semibold text-slate-700 view-mode-elements" data-key="overzicht-2-1-title">2.1 Visie en Missie</h3>
                             <input type="text" class="edit-mode-elements" data-key="overzicht-2-1-title">
                             <p class="text-sm text-slate-500 mt-2 view-mode-elements" data-key="overzicht-2-1-description">Beschrijf hier de overkoepelende visie van de software.</p>
                             <textarea class="text-sm edit-mode-elements" data-key="overzicht-2-1-description"></textarea>
 
-                             <h3 class="font-semibold text-slate-700 mt-4 view-mode-elements" data-key="overzicht-2-2-title">2.2 Algemene Functionaliteit</h3>
-                             <input type="text" class="edit-mode-elements" data-key="overzicht-2-2-title">
+                            <h3 class="font-semibold text-slate-700 mt-4 view-mode-elements" data-key="overzicht-2-2-title">2.2 Algemene Functionaliteit</h3>
+                            <input type="text" class="edit-mode-elements" data-key="overzicht-2-2-title">
                             <p class="text-sm text-slate-500 mt-2 view-mode-elements" data-key="overzicht-2-2-description">Geef hier een high-level overzicht van de kernfuncties.</p>
                             <textarea class="text-sm edit-mode-elements" data-key="overzicht-2-2-description"></textarea>
+                        </div>
+
+                        <h3 class="font-semibold text-slate-700 mt-4">2.3 Belangrijkste Gebruikers (Persona's)</h3>
+                        <div id="personas-container" class="grid md:grid-cols-2 gap-4">
+                            <!-- Persona's zullen hier dynamisch geladen worden -->
+                        </div>
+                        <div class="edit-mode-elements flex justify-center mt-4">
+                            <button id="add-persona-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-blue-500 text-white hover:bg-blue-600">Persona Toevoegen</button>
                         </div>
                     </div>
                 </section>
@@ -281,51 +331,15 @@
                     </div>
                     <p class="mb-4 text-slate-600 view-mode-elements" data-key="nfr-main-paragraph">Deze sectie beschrijft *hoe goed* het systeem moet functioneren. Dit omvat aspecten als prestaties, beveiliging en betrouwbaarheid. Deze eisen zijn cruciaal voor de algehele kwaliteit en gebruikerservaring. Klik op de categorieën om de voorbeelden te bekijken.</p>
                     <textarea class="mb-4 edit-mode-elements" data-key="nfr-main-paragraph"></textarea>
-                    <div id="nfr-accordion" class="space-y-2">
-                        <div class="bg-white border border-slate-200 rounded-lg">
-                            <button class="accordion-toggle w-full flex justify-between items-center p-4 text-left font-semibold view-mode-elements">
-                                <span data-key="nfr-4-1-title">4.1 Prestatie</span>
-                                <span class="accordion-icon transform transition-transform">▼</span>
-                            </button>
-                            <div class="edit-mode-elements p-4">
-                                <input type="text" class="mb-2" data-key="nfr-4-1-title">
-                            </div>
-                            <div class="accordion-content hidden p-4 border-t border-slate-200">
-                                <p class="text-sm text-slate-600 mb-2 view-mode-elements" data-key="nfr-4-1-description">Eisen met betrekking tot snelheid en schaalbaarheid.</p>
-                                <textarea class="text-sm edit-mode-elements" data-key="nfr-4-1-description"></textarea>
-                                <ul class="list-disc list-inside text-sm text-slate-500">
-                                    <li class="view-mode-elements" data-key="nfr-4-1-item-1">**Responsietijden:** Pagina's laden binnen 2 seconden.</li>
-                                    <textarea class="edit-mode-elements" data-key="nfr-4-1-item-1"></textarea>
-                                    <li class="view-mode-elements" data-key="nfr-4-1-item-2">**Schaalbaarheid:** Systeem ondersteunt 500 gelijktijdige gebruikers.</li>
-                                    <textarea class="edit-mode-elements" data-key="nfr-4-1-item-2"></textarea>
-                                </ul>
-                                <div class="chart-container mt-4">
-                                    <canvas id="performanceChart"></canvas>
-                                </div>
-                                <p class="text-center text-xs text-slate-400 mt-2 view-mode-elements" data-key="nfr-4-1-chart-caption">Voorbeeld: Een grafiek kan de laadtijd van pagina's visualiseren.</p>
-                                <textarea class="edit-mode-elements" data-key="nfr-4-1-chart-caption"></textarea>
-                            </div>
-                        </div>
-                        <div class="bg-white border border-slate-200 rounded-lg">
-                            <button class="accordion-toggle w-full flex justify-between items-center p-4 text-left font-semibold view-mode-elements">
-                                <span data-key="nfr-4-2-title">4.2 Beveiliging</span>
-                                <span class="accordion-icon transform transition-transform">▼</span>
-                            </button>
-                            <div class="edit-mode-elements p-4">
-                                <input type="text" class="mb-2" data-key="nfr-4-2-title">
-                            </div>
-                            <div class="accordion-content hidden p-4 border-t border-slate-200">
-                                <p class="text-sm text-slate-600 mb-2 view-mode-elements" data-key="nfr-4-2-description">Eisen om het systeem en de data te beschermen.</p>
-                                <textarea class="text-sm edit-mode-elements" data-key="nfr-4-2-description"></textarea>
-                                <ul class="list-disc list-inside text-sm text-slate-500">
-                                    <li class="view-mode-elements" data-key="nfr-4-2-item-1">**Authenticatie:** Multi-factor authenticatie is verplicht voor beheerders.</li>
-                                    <textarea class="edit-mode-elements" data-key="nfr-4-2-item-1"></textarea>
-                                    <li class="view-mode-elements" data-key="nfr-4-2-item-2">**Autorisatie:** Gebruikers hebben alleen toegang tot hun eigen data.</li>
-                                    <textarea class="edit-mode-elements" data-key="nfr-4-2-item-2"></textarea>
-                                    <li class="view-mode-elements" data-key="nfr-4-2-item-3">**Gegevensversleuteling:** Gevoelige data wordt versleuteld opgeslagen (at-rest).</li>
-                                    <textarea class="edit-mode-elements" data-key="nfr-4-2-item-3"></textarea>
-                                </ul>
-                            </div>
+                    
+                    <div id="nfr-categories-container" class="space-y-2">
+                        <!-- NFR categories will be dynamically loaded -->
+                    </div>
+
+                    <div id="add-nfr-category-btn-container" class="edit-mode-elements flex flex-col items-center mt-4">
+                        <button id="add-nfr-category-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-blue-500 text-white hover:bg-blue-600 mb-2">Nieuwe Categorie Toevoegen</button>
+                        <div id="undo-nfr-category-container" class="undo-nfr-item-btn-container hidden">
+                            <button id="undo-nfr-category-btn" class="px-3 py-1 text-sm font-medium rounded-md bg-orange-500 text-white hover:bg-orange-600">Maak Categorie Verwijdering Ongedaan</button>
                         </div>
                     </div>
                 </section>
@@ -340,38 +354,45 @@
                         </div>
                         <button class="edit-btn px-3 py-1 text-sm font-medium rounded-md bg-sky-600 text-white hover:bg-sky-700 view-mode-elements">Bewerk</button>
                     </div>
-                     <p class="mb-4 text-slate-600 view-mode-elements" data-key="gegevensmodel-main-paragraph">Deze sectie definieert de structuur van de data. Het beschrijft de belangrijkste entiteiten (zoals 'Gebruiker' of 'Product') en hoe deze met elkaar in verband staan. Hieronder staat een vereenvoudigde visuele weergave, gemaakt met HTML en CSS.</p>
+                     <p class="mb-4 text-slate-600 view-mode-elements" data-key="gegevensmodel-main-paragraph">Deze sectie definieert de structuur van de data. Het beschrijft de belangrijkste entiteiten (zoals 'Gebruiker' of 'Product') en hoe deze met elkaar in verband staan. De relatie tussen entiteiten kan complex is; in deze weergave worden entiteiten en hun attributen beheerbaar gemaakt. **Let op:** Een complex, visueel schema tekenprogramma zoals Draw.io is niet mogelijk binnen deze enkele HTML-pagina.</p>
                      <textarea class="mb-4 edit-mode-elements" data-key="gegevensmodel-main-paragraph"></textarea>
 
-                     <div class="relative bg-slate-100 p-8 rounded-lg h-96 flex items-center justify-center space-x-24">
-                        <!-- Tables -->
-                        <div class="erd-table z-10">
-                            <h4 class="font-bold border-b pb-1 mb-2 view-mode-elements" data-key="erd-gebruiker-title">Gebruiker</h4>
-                            <input type="text" class="edit-mode-elements" data-key="erd-gebruiker-title">
-                            <ul class="text-sm text-slate-600">
-                                <li class="view-mode-elements" data-key="erd-gebruiker-pk"><strong>gebruiker_id (PK)</strong></li>
-                                <input type="text" class="edit-mode-elements" data-key="erd-gebruiker-pk">
-                                <li class="view-mode-elements" data-key="erd-gebruiker-naam">naam</li>
-                                <input type="text" class="edit-mode-elements" data-key="erd-gebruiker-naam">
-                                <li class="view-mode-elements" data-key="erd-gebruiker-email">email</li>
-                                <input type="text" class="edit-mode-elements" data-key="erd-gebruiker-email">
-                            </ul>
-                        </div>
-                        <div class="erd-table z-10">
-                             <h4 class="font-bold border-b pb-1 mb-2 view-mode-elements" data-key="erd-bestelling-title">Bestelling</h4>
-                             <input type="text" class="edit-mode-elements" data-key="erd-bestelling-title">
-                             <ul class="text-sm text-slate-600">
-                                <li class="view-mode-elements" data-key="erd-bestelling-pk"><strong>bestelling_id (PK)</strong></li>
-                                <input type="text" class="edit-mode-elements" data-key="erd-bestelling-pk">
-                                <li class="view-mode-elements" data-key="erd-bestelling-fk"><em>gebruiker_id (FK)</em></li>
-                                <input type="text" class="edit-mode-elements" data-key="erd-bestelling-fk">
-                                <li class="view-mode-elements" data-key="erd-bestelling-date">besteldatum</li>
-                                <input type="text" class="edit-mode-elements" data-key="erd-bestelling-date">
-                             </ul>
-                        </div>
-                        <!-- Line -->
-                        <div class="erd-line" style="left: 230px; top: 50%; width: 96px; height: 2px;"></div>
+                     <div id="entities-container" class="relative bg-slate-100 p-8 rounded-lg min-h-96 flex flex-wrap items-start justify-center content-start">
+                        <!-- ERD Canvas for drawing relationships -->
+                        <canvas id="erd-canvas"></canvas>
+                        <!-- Entities will be dynamically loaded -->
                      </div>
+                    <div class="edit-mode-elements flex justify-center mt-4">
+                        <button id="add-entity-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-blue-500 text-white hover:bg-blue-600">Entiteit Toevoegen</button>
+                    </div>
+
+                    <div id="relationships-management" class="edit-mode-elements bg-white p-4 rounded-lg border border-slate-200 mt-8">
+                        <h3 class="font-semibold text-slate-700 mb-4">Relaties Beheren</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label for="source-entity" class="block text-sm font-medium text-slate-700">Bron Entiteit:</label>
+                                <select id="source-entity" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                            <div>
+                                <label for="target-entity" class="block text-sm font-medium text-slate-700">Doel Entiteit:</label>
+                                <select id="target-entity" class="mt-1 block w-full p-2 border border-slate-300 rounded-md">
+                                    <!-- Options populated by JS -->
+                                </select>
+                            </div>
+                            <div>
+                                <label for="relationship-label" class="block text-sm font-medium text-slate-700">Label (bijv. 1:N):</label>
+                                <input type="text" id="relationship-label" class="mt-1 block w-full p-2 border border-slate-300 rounded-md" placeholder="Bijv. 1:N">
+                            </div>
+                        </div>
+                        <button id="add-relationship-btn" class="px-4 py-2 text-sm font-medium rounded-md bg-green-600 text-white hover:bg-green-700">Relatie Toevoegen</button>
+
+                        <h4 class="font-semibold text-slate-700 mt-6 mb-2">Bestaande Relaties:</h4>
+                        <ul id="existing-relationships-list" class="space-y-2">
+                            <!-- Existing relationships will be listed here -->
+                        </ul>
+                    </div>
                 </section>
 
                 <!-- Other sections would follow a similar pattern -->
@@ -466,38 +487,19 @@
                                     <th class="p-3 text-left font-semibold">Datum</th>
                                     <th class="p-3 text-left font-semibold">Auteur</th>
                                     <th class="p-3 text-left font-semibold">Beschrijving</th>
+                                    <th class="p-3 text-left font-semibold edit-mode-elements revisie-actions">Acties</th>
                                 </tr>
                             </thead>
-                            <tbody class="view-mode-elements" data-key="revisiegeschiedenis-table-body">
-                                <tr class="border-t">
-                                    <td class="p-3">0.1</td>
-                                    <td class="p-3">[Datum]</td>
-                                    <td class="p-3">[Naam]</td>
-                                    <td class="p-3">Eerste concept</td>
-                                </tr>
-                                 <tr class="border-t">
-                                    <td class="p-3">1.0</td>
-                                    <td class="p-3">[Datum]</td>
-                                    <td class="p-3">[Naam]</td>
-                                    <td class="p-3">Definitieve versie</td>
-                                </tr>
+                            <tbody id="revisie-table-body-view" class="view-mode-elements">
+                                <!-- Content will be dynamically loaded/rendered by JS -->
                             </tbody>
-                            <tbody class="edit-mode-elements" data-key="revisiegeschiedenis-table-body">
-                                <!-- Editable rows will be dynamically added/managed by JS -->
-                                <tr class="border-t">
-                                    <td class="p-3"><input type="text" data-key="revisie-0-version" value="0.1"></td>
-                                    <td class="p-3"><input type="text" data-key="revisie-0-date" value="[Datum]"></td>
-                                    <td class="p-3"><input type="text" data-key="revisie-0-author" value="[Naam]"></td>
-                                    <td class="p-3"><input type="text" data-key="revisie-0-description" value="Eerste concept"></td>
-                                </tr>
-                                <tr class="border-t">
-                                    <td class="p-3"><input type="text" data-key="revisie-1-version" value="1.0"></td>
-                                    <td class="p-3"><input type="text" data-key="revisie-1-date" value="[Datum]"></td>
-                                    <td class="p-3"><input type="text" data-key="revisie-1-author" value="[Naam]"></td>
-                                    <td class="p-3"><input type="text" data-key="revisie-1-description" value="Definitieve versie"></td>
-                                </tr>
+                            <tbody id="revisie-table-body-edit" class="edit-mode-elements">
+                                <!-- Content will be dynamically loaded/rendered by JS -->
                             </tbody>
                         </table>
+                        <div class="edit-mode-elements flex justify-center mt-4">
+                            <button id="add-revisie-row" class="px-4 py-2 text-sm font-medium rounded-md bg-blue-500 text-white hover:bg-blue-600">Rij Toevoegen</button>
+                        </div>
                     </div>
                 </section>
 
@@ -508,19 +510,587 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             let dataStore = JSON.parse(localStorage.getItem('foTemplateData')) || {};
-            let originalSectionData = {}; // Om data op te slaan bij het betreden van de bewerkmodus voor annulering
+            let originalSectionData = {}; 
+            let lastDeletedNfrItem = null; // Stores {nfrKey, index, itemContent} for NFR list items undo
+            let lastDeletedNfrCategory = null; // Stores {index, categoryObject} for NFR category undo
+
+            // Standaard data initialisatie indien nog niet in localStorage
+            if (!dataStore['revisiegeschiedenis-data']) {
+                dataStore['revisiegeschiedenis-data'] = [
+                    { version: '0.1', date: '01-01-2023', author: 'Initial', description: 'Eerste concept' },
+                    { version: '1.0', date: '15-01-2023', author: 'Final', description: 'Definitieve versie' }
+                ];
+            }
+            if (!dataStore['personas-data']) {
+                dataStore['personas-data'] = [
+                    { name: 'Anna, de Projectmanager', goals: 'Duidelijk overzicht van projectstatus en voortgang van taken.', painpoints: 'Moeite met consolideren van informatie uit verschillende systemen, wat leidt tot vertragingen.' }
+                ];
+            }
+            // Initialize NFR categories as an array of objects
+            if (!dataStore['nfr-categories']) {
+                dataStore['nfr-categories'] = [
+                    { 
+                        title: 'Prestatie', 
+                        description: 'Eisen met betrekking tot snelheid en schaalbaarheid.', 
+                        items: ['**Responsietijden:** Pagina\'s laden binnen 2 seconden.', '**Schaalbaarheid:** Systeem ondersteunt 500 gelijktijdige gebruikers.'] 
+                    },
+                    { 
+                        title: 'Beveiliging', 
+                        description: 'Eisen om het systeem en de data te beschermen.', 
+                        items: ['**Authenticatie:** Multi-factor authenticatie is verplicht voor beheerders.', '**Autorisatie:** Gebruikers hebben alleen toegang tot hun eigen data.', '**Gegevensversleuteling:** Gevoelige data wordt versleuteld opgeslagen (at-rest).'] 
+                    },
+                    { 
+                        title: 'Beschikbaarheid en Betrouwbaarheid', 
+                        description: 'Eisen met betrekking tot beschikbaarheid en herstel.', 
+                        items: ['**Uptime:** Het systeem moet minimaal 99.9% van de tijd beschikbaar zijn.', '**Herstel:** Hersteltijd (RTO) van maximaal 4 uur in geval van storing.', '**Gegevensverlies:** Maximaal gegevensverlies (RPO) van 5 minuten.'] 
+                    },
+                    { 
+                        title: 'Bruikbaarheid (Usability)', 
+                        description: 'Eisen met betrekking tot gebruikersgemak.', 
+                        items: ['**Consistentie:** Consistente gebruikersinterface en navigatie.', '**Toegankelijkheid:** Voldoen aan WCAG 2.1 AA.', '**Feedback:** Duidelijke feedback aan de gebruiker over systeemstatus en acties.'] 
+                    },
+                    { 
+                        title: 'Onderhoudbaarheid', 
+                        description: 'Eisen met betrekking tot beheer en uitbreiding.', 
+                        items: ['**Modulariteit:** Het systeem moet modulair zijn opgebouwd voor eenvoudig onderhoud en uitbreiding.', '**Documentatie:** Broncode moet goed gedocumenteerd zijn.'] 
+                    },
+                    { 
+                        title: 'Compatibiliteit', 
+                        description: 'Eisen met betrekking tot compatibiliteit met browsers, apparaten en besturingssystemen.', 
+                        items: ['**Browsers:** Ondersteuning voor Chrome, Firefox, Edge (laatste 2 versies).', '**Apparaten:** Responsief ontwerp voor desktop, tablet en mobiel.', '**Besturingssystemen:** Compatibiliteit met Windows, macOS, iOS, Android.'] 
+                    }
+                ];
+            }
+
+            if (!dataStore['gegevensmodel-entities']) {
+                dataStore['gegevensmodel-entities'] = [
+                    { id: 'gebruiker', title: 'Gebruiker', attributes: ['<strong>gebruiker_id (PK)</strong>', 'naam', 'email', 'wachtwoord_hash', 'registratiedatum'] },
+                    { id: 'product', title: 'Product', attributes: ['<strong>product_id (PK)</strong>', 'naam', 'beschrijving', 'prijs', '<em>categorie_id (FK)</em>'] },
+                    { id: 'bestelling', title: 'Bestelling', attributes: ['<strong>bestelling_id (PK)</strong>', '<em>gebruiker_id (FK)</em>', 'besteldatum', 'totaalprijs', 'status'] }
+                ];
+            }
+            // New: Initialize relationships
+            if (!dataStore['gegevensmodel-relationships']) {
+                dataStore['gegevensmodel-relationships'] = [
+                    { source: 'gebruiker', target: 'bestelling', label: '1:N', bidirectional: false },
+                    { source: 'bestelling', target: 'product', label: 'N:M', bidirectional: true } // Example of bidirectional
+                ];
+            }
+
 
             // Functie om content te laden vanuit dataStore (localStorage)
             const loadContent = () => {
                 document.querySelectorAll('[data-key]').forEach(element => {
                     const key = element.dataset.key;
-                    if (dataStore[key]) {
+                    // Skip dynamic list items and NFR titles as they are rendered by dedicated functions
+                    if (key.startsWith('revisie-') || key.startsWith('persona-') || key.includes('-item-') || key.startsWith('entity-') || key.includes('-category-')) {
+                        return;
+                    }
+                    if (dataStore[key] !== undefined) { 
                         if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
                             element.value = dataStore[key];
                         } else {
                             element.innerHTML = dataStore[key];
                         }
                     }
+                });
+                renderRevisieTable('view'); 
+                renderPersonas('view');
+                renderNFRCategories('view'); // Render all NFR categories
+                renderEntities('view'); // This now calls drawRelationships
+                populateRelationshipDropdowns(); // Update dropdowns when entities change
+                renderRelationshipsList(); // Render the list of relationships
+            };
+
+            // Functie om revisiegeschiedenis tabel te renderen
+            const renderRevisieTable = (mode) => {
+                const tbodyView = document.getElementById('revisie-table-body-view');
+                const tbodyEdit = document.getElementById('revisie-table-body-edit');
+                
+                tbodyView.innerHTML = '';
+                tbodyEdit.innerHTML = '';
+
+                dataStore['revisiegeschiedenis-data'].forEach((row, index) => {
+                    // View Mode Row
+                    const trView = document.createElement('tr');
+                    trView.className = 'border-t';
+                    trView.innerHTML = `
+                        <td class="p-3 view-mode-elements" data-key="revisie-${index}-version">${row.version}</td>
+                        <td class="p-3 view-mode-elements" data-key="revisie-${index}-date">${row.date}</td>
+                        <td class="p-3 view-mode-elements" data-key="revisie-${index}-author">${row.author}</td>
+                        <td class="p-3 view-mode-elements" data-key="revisie-${index}-description">${row.description}</td>
+                    `;
+                    tbodyView.appendChild(trView);
+
+                    // Edit Mode Row
+                    const trEdit = document.createElement('tr');
+                    trEdit.className = 'border-t';
+                    trEdit.innerHTML = `
+                        <td class="p-3"><input type="text" data-key="revisie-${index}-version" value="${row.version}"></td>
+                        <td class="p-3"><input type="text" data-key="revisie-${index}-date" value="${row.date}"></td>
+                        <td class="p-3"><input type="text" data-key="revisie-${index}-author" value="${row.author}"></td>
+                        <td class="p-3"><input type="text" data-key="revisie-${index}-description" value="${row.description}"></td>
+                        <td class="p-3 revisie-actions"><button class="delete-revisie-row px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600" data-index="${index}">Verwijder</button></td>
+                    `;
+                    tbodyEdit.appendChild(trEdit);
+                });
+
+                if (mode === 'edit') {
+                    tbodyEdit.querySelectorAll('.delete-revisie-row').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const indexToDelete = parseInt(e.target.dataset.index);
+                            dataStore['revisiegeschiedenis-data'].splice(indexToDelete, 1);
+                            renderRevisieTable('edit'); 
+                        });
+                    });
+                }
+            };
+
+            // Functie om persona's te renderen
+            const renderPersonas = (mode) => {
+                const container = document.getElementById('personas-container');
+                container.innerHTML = ''; 
+
+                dataStore['personas-data'].forEach((persona, index) => {
+                    const personaDiv = document.createElement('div');
+                    personaDiv.className = 'bg-white p-4 rounded-lg border border-slate-200';
+                    personaDiv.innerHTML = `
+                        <h3 class="font-semibold text-slate-700 view-mode-elements">Persona ${index + 1}</h3>
+                        <input type="text" class="edit-mode-elements mb-2" data-key="persona-${index}-title" value="Persona ${index + 1}">
+                        <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Naam:</p>
+                        <p class="text-sm text-slate-500 view-mode-elements" data-key="persona-${index}-name">${persona.name}</p>
+                        <input type="text" class="edit-mode-elements" data-key="persona-${index}-name" value="${persona.name}">
+
+                        <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Doelen:</p>
+                        <p class="text-sm text-slate-500 view-mode-elements" data-key="persona-${index}-goals">${persona.goals}</p>
+                        <textarea class="text-sm edit-mode-elements" data-key="persona-${index}-goals">${persona.goals}</textarea>
+
+                        <p class="text-sm font-medium text-sky-700 mt-2 view-mode-elements">Pijnpunten:</p>
+                        <p class="text-sm text-slate-500 view-mode-elements" data-key="persona-${index}-painpoints">${persona.painpoints}</p>
+                        <textarea class="text-sm edit-mode-elements" data-key="persona-${index}-painpoints">${persona.painpoints}</textarea>
+                        ${mode === 'edit' ? `<div class="persona-actions flex justify-end mt-4"><button class="delete-persona-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600" data-index="${index}">Verwijder</button></div>` : ''}
+                    `;
+                    container.appendChild(personaDiv);
+                });
+
+                if (mode === 'edit') {
+                    container.querySelectorAll('.delete-persona-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const indexToDelete = parseInt(e.target.dataset.index);
+                            dataStore['personas-data'].splice(indexToDelete, 1);
+                            renderPersonas('edit'); 
+                        });
+                    });
+                }
+            };
+
+            // Functie om NFR categorieën te renderen
+            const renderNFRCategories = (mode) => {
+                const container = document.getElementById('nfr-categories-container');
+                container.innerHTML = ''; 
+                lastDeletedNfrCategory = null; // Reset for category undo on re-render
+
+                dataStore['nfr-categories'].forEach((category, catIndex) => {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'bg-white p-4 rounded-lg border border-slate-200';
+                    categoryDiv.setAttribute('data-nfr-category-index', catIndex); // Store index for easy lookup
+
+                    // Calculate display number
+                    const displayNum = `4.${catIndex + 1}`;
+
+                    categoryDiv.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-semibold text-slate-700 view-mode-elements flex-grow" data-key="nfr-category-${catIndex}-title-view">${displayNum} ${category.title}</h3>
+                            <input type="text" class="edit-mode-elements flex-grow mr-2" data-key="nfr-category-${catIndex}-title-edit" value="${category.title}">
+                            <button class="accordion-toggle px-3 py-1 text-sm font-medium rounded-md bg-slate-200 text-slate-700 hover:bg-slate-300 transform transition-transform">
+                                <span class="accordion-icon">▼</span>
+                            </button>
+                            ${mode === 'edit' ? `<button class="delete-nfr-category-btn px-3 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600 ml-2 edit-mode-elements" data-nfr-category-index="${catIndex}">Verwijder Categorie</button>` : ''}
+                        </div>
+                        <div class="accordion-content hidden">
+                            <p class="text-sm text-slate-600 mb-2 view-mode-elements" data-key="nfr-category-${catIndex}-description">${category.description}</p>
+                            <textarea class="text-sm edit-mode-elements" data-key="nfr-category-${catIndex}-description">${category.description}</textarea>
+                            <ul id="nfr-category-${catIndex}-items-list-view" class="list-disc list-inside text-sm text-slate-500 view-mode-elements">
+                                <!-- Items will be dynamically loaded -->
+                            </ul>
+                            <ul id="nfr-category-${catIndex}-items-list-edit" class="list-disc list-inside text-sm text-slate-500 edit-mode-elements">
+                                <!-- Items will be dynamically loaded -->
+                            </ul>
+                            <div class="edit-mode-elements flex flex-col items-center mt-2">
+                                <button class="add-nfr-item-btn px-3 py-1 text-sm font-medium rounded-md bg-blue-500 text-white hover:bg-blue-600 mb-2" data-nfr-category-index="${catIndex}">Item Toevoegen</button>
+                                <div id="undo-nfr-item-${catIndex}-container" class="undo-nfr-item-btn-container hidden">
+                                    <button class="undo-nfr-item-btn px-3 py-1 text-sm font-medium rounded-md bg-orange-500 text-white hover:bg-orange-600" data-nfr-category-index="${catIndex}">Maak Verwijdering Ongedaan</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(categoryDiv);
+
+                    // Render items for this category
+                    renderNFRItemsList(catIndex, mode);
+                });
+
+                if (mode === 'edit') {
+                    // Attach event listeners for dynamic buttons
+                    container.querySelectorAll('.delete-nfr-category-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const indexToDelete = parseInt(e.target.dataset.nfrCategoryIndex);
+                            lastDeletedNfrCategory = {
+                                index: indexToDelete,
+                                category: JSON.parse(JSON.stringify(dataStore['nfr-categories'][indexToDelete])) // Deep copy
+                            };
+                            document.getElementById('undo-nfr-category-container').classList.remove('hidden');
+
+                            dataStore['nfr-categories'].splice(indexToDelete, 1);
+                            renderNFRCategories('edit'); // Re-render to update numbering and listeners
+                        });
+                    });
+
+                    document.getElementById('undo-nfr-category-btn').addEventListener('click', () => {
+                        if (lastDeletedNfrCategory) {
+                            const { index, category } = lastDeletedNfrCategory;
+                            dataStore['nfr-categories'].splice(index, 0, category);
+                            renderNFRCategories('edit');
+                            lastDeletedNfrCategory = null;
+                            document.getElementById('undo-nfr-category-container').classList.add('hidden');
+                        }
+                    }, { once: true }); // Ensure it only fires once until next delete
+
+                    container.querySelectorAll('.add-nfr-item-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const catIndex = parseInt(e.target.dataset.nfrCategoryIndex);
+                            dataStore['nfr-categories'][catIndex].items.push(''); 
+                            renderNFRItemsList(catIndex, 'edit');
+                        });
+                    });
+
+                    container.querySelectorAll('.accordion-toggle').forEach(toggle => {
+                        toggle.addEventListener('click', (e) => {
+                            const content = e.target.closest('.flex.justify-between.items-center.mb-2').nextElementSibling;
+                            const icon = toggle.querySelector('.accordion-icon');
+                            content.classList.toggle('hidden');
+                            icon.classList.toggle('rotate-180');
+                        });
+                    });
+                }
+            };
+
+            // Functie om NFR itemslijsten te renderen (nu binnen een specifieke categorie-index)
+            const renderNFRItemsList = (catIndex, mode) => {
+                const category = dataStore['nfr-categories'][catIndex];
+                if (!category) return; // Category might have been deleted
+
+                const listView = document.getElementById(`nfr-category-${catIndex}-items-list-view`);
+                const listEdit = document.getElementById(`nfr-category-${catIndex}-items-list-edit`);
+                const undoButtonContainer = document.getElementById(`undo-nfr-item-${catIndex}-container`);
+                
+                if (!listView || !listEdit) return; 
+
+                listView.innerHTML = '';
+                listEdit.innerHTML = '';
+
+                category.items.forEach((item, itemIndex) => {
+                    // View Mode
+                    const liView = document.createElement('li');
+                    liView.className = 'view-mode-elements';
+                    liView.innerHTML = item;
+                    listView.appendChild(liView);
+
+                    // Edit Mode
+                    const liEdit = document.createElement('li');
+                    liEdit.className = 'edit-mode-elements flex items-center mb-1';
+                    liEdit.innerHTML = `
+                        <textarea class="w-full text-sm mr-2" data-key="nfr-category-${catIndex}-item-${itemIndex}-edit">${item}</textarea>
+                        <button class="delete-nfr-item-btn px-2 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600 flex-shrink-0" data-nfr-category-index="${catIndex}" data-item-index="${itemIndex}">-</button>
+                    `;
+                    listEdit.appendChild(liEdit);
+                });
+
+                if (mode === 'edit') {
+                    listEdit.querySelectorAll('.delete-nfr-item-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const currentCatIndex = parseInt(e.target.dataset.nfrCategoryIndex);
+                            const indexToDelete = parseInt(e.target.dataset.itemIndex);
+                            
+                            // Store for undo
+                            lastDeletedNfrItem = {
+                                nfrKey: currentCatIndex, // This is now the category index
+                                index: indexToDelete,
+                                itemContent: dataStore['nfr-categories'][currentCatIndex].items[indexToDelete]
+                            };
+                            undoButtonContainer.classList.remove('hidden');
+
+                            dataStore['nfr-categories'][currentCatIndex].items.splice(indexToDelete, 1);
+                            renderNFRItemsList(currentCatIndex, 'edit');
+                        });
+                    });
+
+                    // Undo for individual items
+                    if (undoButtonContainer) {
+                        const undoBtn = undoButtonContainer.querySelector('.undo-nfr-item-btn');
+                        if (undoBtn) {
+                            undoBtn.onclick = (e) => { // Use onclick to easily overwrite previous listeners
+                                if (lastDeletedNfrItem && lastDeletedNfrItem.nfrKey === catIndex) {
+                                    const { nfrKey, index, itemContent } = lastDeletedNfrItem;
+                                    dataStore['nfr-categories'][nfrKey].items.splice(index, 0, itemContent); 
+                                    renderNFRItemsList(nfrKey, 'edit');
+                                    lastDeletedNfrItem = null; 
+                                    e.target.parentElement.classList.add('hidden'); 
+                                }
+                            };
+                        }
+                    }
+                }
+            };
+
+
+            // Functie om entiteiten (gegevensmodel) te renderen
+            const renderEntities = (mode) => {
+                const container = document.getElementById('entities-container');
+                container.innerHTML = ''; // Clear existing content
+                
+                // Set container styling based on mode for responsiveness
+                if (mode === 'view') {
+                    container.classList.remove('flex-col', 'items-start', 'justify-start');
+                    container.classList.add('flex-wrap', 'justify-center', 'items-start');
+                    container.style.height = 'auto'; // Let height adjust to content
+                } else { // Edit mode
+                    container.classList.remove('flex-wrap', 'justify-center', 'items-start');
+                    container.classList.add('flex-col', 'items-start', 'justify-start'); // Stack vertically for easier editing
+                    container.style.height = 'auto'; // Ensure it can expand
+                }
+
+                dataStore['gegevensmodel-entities'].forEach((entity) => {
+                    const entityDiv = document.createElement('div');
+                    entityDiv.className = 'erd-table relative';
+                    entityDiv.setAttribute('data-entity-id', entity.id); 
+                    entityDiv.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold border-b pb-1 flex-grow view-mode-elements" data-key="entity-${entity.id}-title">${entity.title}</h4>
+                            <input type="text" class="edit-mode-elements flex-grow mr-2" data-key="entity-${entity.id}-title" value="${entity.title}">
+                            ${mode === 'edit' ? `<button class="delete-entity-btn px-2 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600 flex-shrink-0" data-entity-id="${entity.id}">X</button>` : ''}
+                        </div>
+                        <ul class="text-sm text-slate-600" id="entity-${entity.id}-attributes-${mode}">
+                            <!-- Attributes will be loaded dynamically -->
+                        </ul>
+                        ${mode === 'edit' ? `
+                            <div class="edit-mode-elements flex justify-center mt-2 attribute-actions">
+                                <button class="add-attribute-btn px-3 py-1 text-sm font-medium rounded-md bg-blue-500 text-white hover:bg-blue-600" data-entity-id="${entity.id}">Rij Toevoegen</button>
+                            </div>
+                        ` : ''}
+                    `;
+                    container.appendChild(entityDiv);
+
+                    // Render attributes for this entity
+                    const attributesList = entityDiv.querySelector(`#entity-${entity.id}-attributes-${mode}`);
+                    entity.attributes.forEach((attr, attrIndex) => {
+                        const li = document.createElement('li');
+                        li.className = 'flex items-center mb-1';
+                        if (mode === 'view') {
+                            li.className += ' view-mode-elements';
+                            li.innerHTML = attr;
+                        } else { // edit mode
+                            li.className += ' edit-mode-elements';
+                            li.innerHTML = `
+                                <input type="text" class="w-full text-sm mr-2" data-key="entity-${entity.id}-attribute-${attrIndex}" value="${attr}">
+                                <button class="delete-attribute-btn px-2 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600 flex-shrink-0" data-entity-id="${entity.id}" data-attribute-index="${attrIndex}">-</button>
+                            `;
+                        }
+                        attributesList.appendChild(li);
+                    });
+                });
+                drawRelationships(); // Always draw relationships after rendering entities
+
+                if (mode === 'edit') {
+                    container.querySelectorAll('.delete-entity-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const entityIdToDelete = e.target.dataset.entityId;
+                            dataStore['gegevensmodel-entities'] = dataStore['gegevensmodel-entities'].filter(e => e.id !== entityIdToDelete);
+                            // Also remove related relationships
+                            dataStore['gegevensmodel-relationships'] = dataStore['gegevensmodel-relationships'].filter(rel => 
+                                rel.source !== entityIdToDelete && rel.target !== entityIdToDelete
+                            );
+                            renderEntities('edit'); 
+                            populateRelationshipDropdowns(); 
+                            renderRelationshipsList(); 
+                        });
+                    });
+
+                    container.querySelectorAll('.add-attribute-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const entityId = e.target.dataset.entityId;
+                            const entity = dataStore['gegevensmodel-entities'].find(e => e.id === entityId);
+                            if (entity) {
+                                entity.attributes.push(''); 
+                                renderEntities('edit'); 
+                            }
+                        });
+                    });
+
+                    container.querySelectorAll('.delete-attribute-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const entityId = e.target.dataset.entityId;
+                            const attributeIndexToDelete = parseInt(e.target.dataset.attributeIndex);
+                            const entity = dataStore['gegevensmodel-entities'].find(e => e.id === entityId);
+                            if (entity) {
+                                entity.attributes.splice(attributeIndexToDelete, 1);
+                                renderEntities('edit'); 
+                            }
+                        });
+                    });
+                }
+            };
+
+            // Functie om relaties te tekenen op de canvas
+            const drawRelationships = () => {
+                const canvas = document.getElementById('erd-canvas');
+                const container = document.getElementById('entities-container');
+                if (!canvas || !container) return;
+
+                // Set canvas dimensions to match container
+                canvas.width = container.offsetWidth;
+                canvas.height = container.offsetHeight;
+
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+
+                ctx.strokeStyle = '#3b82f6'; // Blue-500
+                ctx.lineWidth = 2;
+                ctx.font = '12px Inter';
+                ctx.fillStyle = '#1e293b'; // Slate-800
+
+                // Get current positions of entities
+                const entityPositions = {};
+                dataStore['gegevensmodel-entities'].forEach(entity => {
+                    const entityDiv = container.querySelector(`[data-entity-id="${entity.id}"]`);
+                    if (entityDiv) {
+                        const rect = entityDiv.getBoundingClientRect();
+                        const containerRect = container.getBoundingClientRect();
+                        entityPositions[entity.id] = {
+                            x: rect.left + rect.width / 2 - containerRect.left,
+                            y: rect.top + rect.height / 2 - containerRect.top,
+                            width: rect.width,
+                            height: rect.height
+                        };
+                    }
+                });
+
+                dataStore['gegevensmodel-relationships'].forEach(rel => {
+                    const sourcePos = entityPositions[rel.source];
+                    const targetPos = entityPositions[rel.target];
+
+                    if (sourcePos && targetPos) {
+                        // Calculate start and end points to avoid drawing through entity boxes
+                        const startX = sourcePos.x;
+                        const startY = sourcePos.y;
+                        const endX = targetPos.x;
+                        const endY = targetPos.y;
+
+                        // Draw line
+                        ctx.beginPath();
+                        ctx.moveTo(startX, startY);
+                        ctx.lineTo(endX, endY);
+                        ctx.stroke();
+
+                        // Draw arrowhead (simple triangle)
+                        const angle = Math.atan2(endY - startY, endX - startX);
+                        const headLen = 10;
+                        ctx.save(); // Save context state before rotating
+                        ctx.translate(endX, endY);
+                        ctx.rotate(angle);
+                        ctx.beginPath();
+                        ctx.moveTo(0, 0);
+                        ctx.lineTo(-headLen, -headLen / 2);
+                        ctx.lineTo(-headLen, headLen / 2);
+                        ctx.closePath();
+                        ctx.fill();
+                        ctx.restore(); // Restore context state
+
+                        // Draw label directly on the line
+                        const labelX = (startX + endX) / 2;
+                        const labelY = (startY + endY) / 2;
+                        
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.font = '12px Inter'; // Ensure font is set for accurate measurement
+                        
+                        const textMetrics = ctx.measureText(rel.label);
+                        const textWidth = textMetrics.width;
+                        const textHeight = 14; 
+                        
+                        // Save current transform to draw text horizontally
+                        ctx.save();
+                        // Translate to the center of the line
+                        ctx.translate(labelX, labelY);
+                        // Rotate to align with the line's angle, then rotate back for horizontal text
+                        // Adjusting for horizontal text on a diagonal line
+                        if (Math.abs(angle) > Math.PI / 2) { // For lines going right-to-left, flip text
+                            ctx.rotate(angle + Math.PI);
+                        } else {
+                            ctx.rotate(angle);
+                        }
+                        ctx.rotate(-angle); // Rotate back to horizontal
+                        
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; // Semi-transparent white background
+                        ctx.fillRect(-textWidth / 2 - 2, -textHeight / 2 - 2, textWidth + 4, textHeight + 4);
+                        ctx.fillStyle = '#1e293b'; // Slate-800 for text
+                        ctx.fillText(rel.label, 0, 0); // Draw at (0,0) relative to translated context
+                        ctx.restore(); // Restore context state after drawing text
+                        
+                        ctx.fillStyle = '#3b82f6'; // Reset fill for next arrow
+                    }
+                });
+            };
+
+
+            // Populate dropdowns for relationship management
+            const populateRelationshipDropdowns = () => {
+                const sourceSelect = document.getElementById('source-entity');
+                const targetSelect = document.getElementById('target-entity');
+                
+                if (!sourceSelect || !targetSelect) return; // Ensure elements exist
+
+                sourceSelect.innerHTML = '<option value="">Selecteer</option>';
+                targetSelect.innerHTML = '<option value="">Selecteer</option>';
+
+                dataStore['gegevensmodel-entities'].forEach(entity => {
+                    const option1 = document.createElement('option');
+                    option1.value = entity.id;
+                    option1.textContent = entity.title;
+                    sourceSelect.appendChild(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = entity.id;
+                    option2.textContent = entity.title;
+                    targetSelect.appendChild(option2);
+                });
+            };
+
+            // Render existing relationships list
+            const renderRelationshipsList = () => {
+                const list = document.getElementById('existing-relationships-list');
+                if (!list) return;
+
+                list.innerHTML = '';
+                dataStore['gegevensmodel-relationships'].forEach((rel, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex justify-between items-center bg-slate-50 p-2 rounded-md border border-slate-200';
+                    const sourceTitle = dataStore['gegevensmodel-entities'].find(e => e.id === rel.source)?.title || rel.source;
+                    const targetTitle = dataStore['gegevensmodel-entities'].find(e => e.id === rel.target)?.title || rel.target;
+                    li.innerHTML = `
+                        <span>${sourceTitle} --(${rel.label})--> ${targetTitle}</span>
+                        <button class="delete-relationship-btn px-2 py-1 text-sm font-medium rounded-md bg-red-500 text-white hover:bg-red-600" data-index="${index}">Verwijder</button>
+                    `;
+                    list.appendChild(li);
+                });
+
+                list.querySelectorAll('.delete-relationship-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const indexToDelete = parseInt(e.target.dataset.index);
+                        dataStore['gegevensmodel-relationships'].splice(indexToDelete, 1);
+                        renderRelationshipsList();
+                        drawRelationships(); // Redraw canvas after deletion
+                    });
                 });
             };
 
@@ -529,59 +1099,228 @@
                 const sectionId = section.dataset.sectionId;
                 section.classList.add('edit-mode');
                 
-                originalSectionData[sectionId] = {}; // Sla originele waarden op voor annulering
+                originalSectionData[sectionId] = {}; 
+                lastDeletedNfrItem = null; // Reset undo buffer when entering edit mode
+                lastDeletedNfrCategory = null; // Reset undo buffer for categories
+                document.querySelectorAll('.undo-nfr-item-btn-container').forEach(container => container.classList.add('hidden'));
+
+
+                // Sla gewone tekstvelden en lijstitems op
                 section.querySelectorAll('[data-key]').forEach(element => {
                     const key = element.dataset.key;
-                    if (element.classList.contains('view-mode-elements')) { // Sla content van de kijkmodus op
-                        originalSectionData[sectionId][key] = element.innerHTML;
+                    // Skip dynamic content handled by dedicated render functions
+                    if (key.startsWith('revisie-') || key.startsWith('persona-') || key.includes('-item-') || key.startsWith('entity-') || key.includes('-category-')) {
+                        return;
                     }
-                    if (element.classList.contains('edit-mode-elements')) { // Vul bewerkmodus inputvelden
-                         if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                            const viewElement = section.querySelector(`.view-mode-elements[data-key="${key}"]`);
-                            if (viewElement) {
-                                element.value = viewElement.innerHTML; // Neem content van kijkmodus
-                            }
-                         }
+
+                    if (key.endsWith('-view')) { 
+                        originalSectionData[sectionId][key] = element.innerHTML;
+                    } else if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        // For generic data-key elements that are inputs/textareas
+                        const correspondingViewElement = section.querySelector(`.view-mode-elements[data-key="${key}"]`);
+                        if (correspondingViewElement) {
+                             originalSectionData[sectionId][key] = correspondingViewElement.innerHTML;
+                             element.value = correspondingViewElement.innerHTML;
+                        } else if (dataStore[key] !== undefined) {
+                             originalSectionData[sectionId][key] = dataStore[key];
+                             element.value = dataStore[key];
+                        }
                     }
                 });
+
+                // Special handling for dynamic content
+                if (sectionId === 'revisiegeschiedenis') {
+                    originalSectionData[sectionId]['revisiegeschiedenis-data'] = JSON.parse(JSON.stringify(dataStore['revisiegeschiedenis-data'])); 
+                    renderRevisieTable('edit');
+                } else if (sectionId === 'overzicht') {
+                    originalSectionData[sectionId]['personas-data'] = JSON.parse(JSON.stringify(dataStore['personas-data']));
+                    renderPersonas('edit');
+                } else if (sectionId === 'niet-functionele-eisen') {
+                    originalSectionData[sectionId]['nfr-categories'] = JSON.parse(JSON.stringify(dataStore['nfr-categories'])); // Deep copy
+                    renderNFRCategories('edit'); // Re-render categories in edit mode
+                } else if (sectionId === 'gegevensmodel') {
+                     originalSectionData[sectionId]['gegevensmodel-entities'] = JSON.parse(JSON.stringify(dataStore['gegevensmodel-entities']));
+                     originalSectionData[sectionId]['gegevensmodel-relationships'] = JSON.parse(JSON.stringify(dataStore['gegevensmodel-relationships']));
+                     renderEntities('edit');
+                     populateRelationshipDropdowns(); // Ensure dropdowns are populated on entering edit mode
+                     renderRelationshipsList(); // Render relationships list in edit mode
+                }
             };
 
             // Functie om bewerkmodus uit te schakelen voor een sectie (en op te slaan indien `shouldSave` true is)
             const disableEditMode = (section, shouldSave) => {
                 const sectionId = section.dataset.sectionId;
                 section.classList.remove('edit-mode');
+                lastDeletedNfrItem = null; // Reset undo buffer when exiting edit mode
+                lastDeletedNfrCategory = null; // Reset undo buffer for categories
+                document.querySelectorAll('.undo-nfr-item-btn-container').forEach(container => container.classList.add('hidden'));
 
+                // Verwerk gewone tekstvelden
                 section.querySelectorAll('[data-key]').forEach(element => {
                     const key = element.dataset.key;
-                    if (element.classList.contains('edit-mode-elements')) {
-                        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-                            if (shouldSave) {
-                                dataStore[key] = element.value;
-                            } else if (originalSectionData[sectionId] && originalSectionData[sectionId][key]) {
-                                // Herstel originele content indien geannuleerd
-                                element.value = originalSectionData[sectionId][key];
-                            }
+                     // Skip dynamic content handled by dedicated save logic
+                    if (key.startsWith('revisie-') || key.startsWith('persona-') || key.includes('-item-') || key.startsWith('entity-') || key.includes('-category-')) {
+                        return;
+                    }
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        if (shouldSave) {
+                            dataStore[key] = element.value;
+                        } else if (originalSectionData[sectionId] && originalSectionData[sectionId][key] !== undefined) {
+                            element.value = originalSectionData[sectionId][key];
                         }
                     }
                 });
-                // Na het potentieel opslaan, update de kijk-elementen met de huidige dataStore content
-                section.querySelectorAll('[data-key]').forEach(element => {
-                    const key = element.dataset.key;
-                    if (element.classList.contains('view-mode-elements')) {
-                        if (dataStore[key]) {
-                            element.innerHTML = dataStore[key];
-                        } else if (originalSectionData[sectionId] && originalSectionData[sectionId][key] && !shouldSave) {
-                            element.innerHTML = originalSectionData[sectionId][key]; // Herstel kijk-content bij annuleren
-                        }
+
+                // Special handling for dynamic content saving/restoring
+                if (sectionId === 'revisiegeschiedenis') {
+                    if (shouldSave) {
+                        const updatedRevisieData = [];
+                        document.querySelectorAll('#revisie-table-body-edit tr').forEach(row => {
+                            const version = row.querySelector(`input[data-key$="-version"]`).value;
+                            const date = row.querySelector(`input[data-key$="-date"]`).value;
+                            const author = row.querySelector(`input[data-key$="-author"]`).value;
+                            const description = row.querySelector(`input[data-key$="-description"]`).value;
+                            updatedRevisieData.push({ version, date, author, description });
+                        });
+                        dataStore['revisiegeschiedenis-data'] = updatedRevisieData;
+                    } else if (originalSectionData[sectionId] && originalSectionData[sectionId]['revisiegeschiedenis-data']) {
+                        dataStore['revisiegeschiedenis-data'] = JSON.parse(JSON.stringify(originalSectionData[sectionId]['revisiegeschiedenis-data']));
                     }
-                });
+                } else if (sectionId === 'overzicht') {
+                    if (shouldSave) {
+                        const updatedPersonas = [];
+                        document.querySelectorAll('#personas-container .bg-white.p-4.rounded-lg').forEach((personaDiv, index) => {
+                            const name = personaDiv.querySelector(`input[data-key="persona-${index}-name"]`).value;
+                            const goals = personaDiv.querySelector(`textarea[data-key="persona-${index}-goals"]`).value;
+                            const painpoints = personaDiv.querySelector(`textarea[data-key="persona-${index}-painpoints"]`).value;
+                            updatedPersonas.push({ name, goals, painpoints });
+                        });
+                        dataStore['personas-data'] = updatedPersonas;
+                    } else if (originalSectionData[sectionId] && originalSectionData[sectionId]['personas-data']) {
+                        dataStore['personas-data'] = JSON.parse(JSON.stringify(originalSectionData[sectionId]['personas-data']));
+                    }
+                } else if (sectionId === 'niet-functionele-eisen') {
+                    if (shouldSave) {
+                        const updatedCategories = [];
+                        document.querySelectorAll('#nfr-categories-container > div.bg-white').forEach((categoryDiv, catIndex) => {
+                            const title = categoryDiv.querySelector(`input[data-key="nfr-category-${catIndex}-title-edit"]`).value;
+                            const description = categoryDiv.querySelector(`textarea[data-key="nfr-category-${catIndex}-description"]`).value;
+                            const items = [];
+                            categoryDiv.querySelectorAll(`textarea[data-key^="nfr-category-${catIndex}-item-"]`).forEach(textarea => { // Correctly select items by category index
+                                items.push(textarea.value);
+                            });
+                            updatedCategories.push({ title, description, items });
+                        });
+                        dataStore['nfr-categories'] = updatedCategories;
+                    } else if (originalSectionData[sectionId] && originalSectionData[sectionId]['nfr-categories']) {
+                        dataStore['nfr-categories'] = JSON.parse(JSON.stringify(originalSectionData[sectionId]['nfr-categories']));
+                    }
+                } else if (sectionId === 'gegevensmodel') {
+                    if (shouldSave) {
+                        // Save entities
+                        const updatedEntities = [];
+                        document.querySelectorAll('#entities-container .erd-table').forEach((entityDiv, entityIndex) => {
+                            // Fetch data by id, not index
+                            const entityId = entityDiv.dataset.entityId; 
+                            const title = entityDiv.querySelector(`input[data-key="entity-${entityId}-title"]`).value;
+                            const attributes = [];
+                            entityDiv.querySelectorAll(`input[data-key^="entity-${entityId}-attribute-"]`).forEach(attrInput => {
+                                attributes.push(attrInput.value);
+                            });
+                            updatedEntities.push({ id: entityId, title, attributes }); // Ensure ID is saved
+                        });
+                        dataStore['gegevensmodel-entities'] = updatedEntities;
+                        // Relationships are already handled by their own add/delete functions so no need to resave here
+                    } else if (originalSectionData[sectionId]) {
+                        dataStore['gegevensmodel-entities'] = JSON.parse(JSON.stringify(originalSectionData[sectionId]['gegevensmodel-entities']));
+                        dataStore['gegevensmodel-relationships'] = JSON.parse(JSON.stringify(originalSectionData[sectionId]['gegevensmodel-relationships']));
+                    }
+                }
+                
                 if (shouldSave) {
                     localStorage.setItem('foTemplateData', JSON.stringify(dataStore));
                 }
-                delete originalSectionData[sectionId]; // Opschonen van originele data
+                loadContent(); 
+                delete originalSectionData[sectionId]; 
             };
 
-            // Voeg event listeners toe voor bewerk/opslaan/annuleren knoppen
+            // Functie voor toevoegen nieuwe rij in revisiegeschiedenis
+            document.getElementById('add-revisie-row').addEventListener('click', () => {
+                dataStore['revisiegeschiedenis-data'].push({ version: '', date: '', author: '', description: '' });
+                renderRevisieTable('edit');
+            });
+
+            // Functie voor toevoegen nieuwe persona
+            document.getElementById('add-persona-btn').addEventListener('click', () => {
+                dataStore['personas-data'].push({ name: '', goals: '', painpoints: '' });
+                renderPersonas('edit');
+            });
+
+            // Functie voor toevoegen nieuw NFR item
+            document.body.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-nfr-item-btn')) {
+                    const nfrCatIndex = parseInt(e.target.dataset.nfrCategoryIndex);
+                    dataStore['nfr-categories'][nfrCatIndex].items.push(''); 
+                    renderNFRItemsList(nfrCatIndex, 'edit');
+                }
+            });
+
+            // Functie voor het ongedaan maken van de laatste NFR item verwijdering
+            document.querySelectorAll('.undo-nfr-item-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    if (lastDeletedNfrItem) {
+                        const { nfrKey, index, itemContent } = lastDeletedNfrItem;
+                        dataStore['nfr-categories'][nfrKey].items.splice(index, 0, itemContent); 
+                        renderNFRItemsList(nfrKey, 'edit');
+                        lastDeletedNfrItem = null; 
+                        e.target.parentElement.classList.add('hidden'); 
+                    }
+                });
+            });
+
+            // Functie voor toevoegen nieuwe NFR categorie
+            document.getElementById('add-nfr-category-btn').addEventListener('click', () => {
+                dataStore['nfr-categories'].push({ 
+                    title: 'Nieuwe Categorie', 
+                    description: 'Beschrijving van de nieuwe categorie.', 
+                    items: ['Nieuw item 1', 'Nieuw item 2'] 
+                });
+                renderNFRCategories('edit');
+            });
+
+            // Functie voor toevoegen nieuwe entiteit (gegevensmodel)
+            document.getElementById('add-entity-btn').addEventListener('click', () => {
+                const newId = `entity-${Date.now()}`; // Generate a unique ID
+                dataStore['gegevensmodel-entities'].push({ id: newId, title: 'Nieuwe Entiteit', attributes: [''] });
+                renderEntities('edit');
+                populateRelationshipDropdowns(); // Update dropdowns
+            });
+
+            // Add Relationship Button Event Listener
+            document.getElementById('add-relationship-btn').addEventListener('click', () => {
+                const sourceEntityId = document.getElementById('source-entity').value;
+                const targetEntityId = document.getElementById('target-entity').value;
+                const label = document.getElementById('relationship-label').value;
+
+                if (sourceEntityId && targetEntityId && label) {
+                    dataStore['gegevensmodel-relationships'].push({
+                        source: sourceEntityId,
+                        target: targetEntityId,
+                        label: label,
+                        bidirectional: false // Default to unidirectional, user can manually change label if bidirectional
+                    });
+                    renderRelationshipsList();
+                    drawRelationships();
+                    document.getElementById('relationship-label').value = ''; // Clear label
+                    document.getElementById('source-entity').value = ''; // Clear source
+                    document.getElementById('target-entity').value = ''; // Clear target
+                } else {
+                    alert('Selecteer een bron- en doelentiteit en voer een label in.');
+                }
+            });
+
+
+            // Voeg event listeners toe voor bewerk/opslaan/annuleren knoppen van secties
             document.querySelectorAll('.editable-section').forEach(section => {
                 const editBtn = section.querySelector('.edit-btn');
                 const saveBtn = section.querySelector('.save-btn');
@@ -616,16 +1355,10 @@
                 showUserStoriesBtn.classList.remove('bg-sky-600', 'text-white');
             });
             
-            // Accordeon
-            const accordionToggles = document.querySelectorAll('.accordion-toggle');
-            accordionToggles.forEach(toggle => {
-                toggle.addEventListener('click', () => {
-                    const content = toggle.nextElementSibling;
-                    const icon = toggle.querySelector('.accordion-icon');
-                    content.classList.toggle('hidden');
-                    icon.classList.toggle('rotate-180');
-                });
-            });
+            // Accordeon voor NFR categorieën (geeft toggle functionaliteit aan de koppen)
+            // Deze moet nu worden toegevoegd aan de dynamisch gegenereerde elementen in renderNFRCategories
+            // via event delegation of door de listener direct toe te voegen na het maken van de knoppen.
+            // Dit is nu geïmplementeerd in renderNFRCategories
 
             // Zijbalk Actieve Status bij Scrollen
             const sections = document.querySelectorAll('section');
@@ -652,43 +1385,6 @@
                 observer.observe(section);
             });
             
-            // Prestatie Grafiek Voorbeeld
-            const ctx = document.getElementById('performanceChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Pagina A', 'Pagina B', 'Pagina C', 'API Call X', 'API Call Y'],
-                    datasets: [{
-                        label: 'Laadtijd (ms)',
-                        data: [850, 1100, 920, 450, 600],
-                        backgroundColor: 'rgba(56, 189, 248, 0.6)',
-                        borderColor: 'rgba(2, 132, 199, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return ` ${context.dataset.label}: ${context.parsed.y} ms`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
             // Functie om data te downloaden als JSON
             const downloadData = () => {
                 const dataStr = JSON.stringify(dataStore, null, 2);
@@ -711,7 +1407,10 @@
                     reader.onload = (e) => {
                         try {
                             const uploadedData = JSON.parse(e.target.result);
-                            dataStore = { ...dataStore, ...uploadedData }; // Merge uploaded data
+                            // Merge uploaded data with existing, allowing it to override
+                            Object.keys(uploadedData).forEach(key => {
+                                dataStore[key] = uploadedData[key];
+                            });
                             localStorage.setItem('foTemplateData', JSON.stringify(dataStore));
                             loadContent(); // Herlaad de content in de browser
                             alert('Bestand succesvol geladen!');
@@ -763,6 +1462,14 @@
 
             // Zorg ervoor dat de content correct wordt geladen bij de start
             loadContent();
+
+            // Handle window resize to redraw relationships
+            window.addEventListener('resize', () => {
+                // Only redraw if not in print mode (window.matchMedia('print').matches)
+                if (!window.matchMedia('print').matches) {
+                    drawRelationships();
+                }
+            });
         });
     </script>
 </body>
